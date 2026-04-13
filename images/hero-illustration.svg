@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 520" fill="none">
+  <defs>
+    <linearGradient id="h-grad1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1E3A5F"/><stop offset="100%" stop-color="#4A90D9"/></linearGradient>
+    <linearGradient id="h-grad2" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#4A90D9"/><stop offset="100%" stop-color="#7BB8F0"/></linearGradient>
+    <linearGradient id="h-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="white" stop-opacity="0.95"/><stop offset="100%" stop-color="white" stop-opacity="0.8"/></linearGradient>
+    <linearGradient id="h-glass2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="white" stop-opacity="0.7"/><stop offset="100%" stop-color="white" stop-opacity="0.4"/></linearGradient>
+    <filter id="h-blur"><feGaussianBlur stdDeviation="40"/></filter>
+    <filter id="h-s1"><feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0F2440" flood-opacity="0.2"/></filter>
+    <filter id="h-s2"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0F2440" flood-opacity="0.12"/></filter>
+    <filter id="h-s3"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0F2440" flood-opacity="0.08"/></filter>
+    <clipPath id="h-clip"><rect x="50" y="40" width="500" height="360" rx="24"/></clipPath>
+  </defs>
+
+  <!-- Ambient background blobs -->
+  <ellipse cx="200" cy="200" rx="200" ry="180" fill="#4A90D9" opacity="0.08" filter="url(#h-blur)"/>
+  <ellipse cx="440" cy="340" rx="160" ry="140" fill="#1E3A5F" opacity="0.06" filter="url(#h-blur)"/>
+  <ellipse cx="100" cy="400" rx="120" ry="100" fill="#7BB8F0" opacity="0.05" filter="url(#h-blur)"/>
+
+  <!-- Main app window -->
+  <g filter="url(#h-s1)">
+    <rect x="50" y="40" width="500" height="360" rx="24" fill="url(#h-glass)" stroke="white" stroke-opacity="0.5" stroke-width="1"/>
+  </g>
+  <g clip-path="url(#h-clip)">
+    <!-- Top bar -->
+    <rect x="50" y="40" width="500" height="52" fill="white" fill-opacity="0.6"/>
+    <line x1="50" y1="92" x2="550" y2="92" stroke="#E1E8EF" stroke-width="1"/>
+    <circle cx="78" cy="66" r="6" fill="#FF6B6B"/><circle cx="98" cy="66" r="6" fill="#FFD93D"/><circle cx="118" cy="66" r="6" fill="#6BCB77"/>
+    <rect x="240" y="56" width="120" height="20" rx="10" fill="#F0F4F8"/>
+    <text x="300" y="70" text-anchor="middle" font-size="8" fill="#94A3B8" font-family="Inter,sans-serif" font-weight="500">app.knowkit.de</text>
+
+    <!-- Sidebar -->
+    <rect x="50" y="92" width="120" height="308" fill="#0F2440"/>
+    <!-- Logo -->
+    <text x="76" y="120" font-size="12" fill="white" font-family="Inter,sans-serif" font-weight="800">KnowKit</text>
+    <!-- Nav items -->
+    <rect x="62" y="140" width="96" height="32" rx="8" fill="#1E3A5F"/>
+    <circle cx="78" cy="156" r="4" fill="#4A90D9"/><rect x="88" y="153" width="56" height="6" rx="3" fill="#4A90D9" opacity="0.8"/>
+    <circle cx="78" cy="184" r="4" fill="#2D5A8E" opacity="0.5"/><rect x="88" y="181" width="48" height="6" rx="3" fill="#2D5A8E" opacity="0.3"/>
+    <circle cx="78" cy="206" r="4" fill="#2D5A8E" opacity="0.5"/><rect x="88" y="203" width="52" height="6" rx="3" fill="#2D5A8E" opacity="0.3"/>
+    <circle cx="78" cy="228" r="4" fill="#2D5A8E" opacity="0.5"/><rect x="88" y="225" width="40" height="6" rx="3" fill="#2D5A8E" opacity="0.3"/>
+
+    <!-- Main content area -->
+    <rect x="170" y="92" width="380" height="308" fill="white" fill-opacity="0.5"/>
+
+    <!-- Page title -->
+    <text x="192" y="124" font-size="14" fill="#0F172A" font-family="Inter,sans-serif" font-weight="800">ERP-Migration Phase 2</text>
+    <rect x="192" y="132" width="120" height="4" rx="2" fill="#4A90D9" opacity="0.3"/>
+
+    <!-- Transcript block -->
+    <g filter="url(#h-s3)">
+      <rect x="188" y="150" width="236" height="200" rx="14" fill="white"/>
+    </g>
+    <text x="204" y="170" font-size="8" fill="#94A3B8" font-family="Inter,sans-serif" font-weight="600" letter-spacing="1">MEETING-TRANSKRIPT</text>
+
+    <!-- Speaker 1 -->
+    <circle cx="210" cy="194" r="12" fill="#6366F1"/>
+    <text x="210" y="198" text-anchor="middle" font-size="9" fill="white" font-family="Inter,sans-serif" font-weight="700">TM</text>
+    <text x="228" y="190" font-size="8" fill="#0F172A" font-family="Inter,sans-serif" font-weight="700">Thomas M.</text>
+    <text x="296" y="190" font-size="7" fill="#94A3B8" font-family="Inter,sans-serif">00:12:34</text>
+    <rect x="228" y="196" width="174" height="5" rx="2.5" fill="#E1E8EF"/><rect x="228" y="204" width="140" height="5" rx="2.5" fill="#E1E8EF"/>
+
+    <!-- Speaker 2 -->
+    <circle cx="210" cy="232" r="12" fill="#F59E0B"/>
+    <text x="210" y="236" text-anchor="middle" font-size="9" fill="white" font-family="Inter,sans-serif" font-weight="700">SK</text>
+    <text x="228" y="228" font-size="8" fill="#0F172A" font-family="Inter,sans-serif" font-weight="700">Sabine K.</text>
+    <text x="290" y="228" font-size="7" fill="#94A3B8" font-family="Inter,sans-serif">00:14:02</text>
+    <rect x="228" y="234" width="160" height="5" rx="2.5" fill="#E1E8EF"/><rect x="228" y="242" width="180" height="5" rx="2.5" fill="#E1E8EF"/><rect x="228" y="250" width="120" height="5" rx="2.5" fill="#E1E8EF"/>
+
+    <!-- Speaker 3 -->
+    <circle cx="210" cy="274" r="12" fill="#10B981"/>
+    <text x="210" y="278" text-anchor="middle" font-size="9" fill="white" font-family="Inter,sans-serif" font-weight="700">ML</text>
+    <text x="228" y="270" font-size="8" fill="#0F172A" font-family="Inter,sans-serif" font-weight="700">Markus L.</text>
+    <text x="292" y="270" font-size="7" fill="#94A3B8" font-family="Inter,sans-serif">00:15:20</text>
+    <rect x="228" y="276" width="150" height="5" rx="2.5" fill="#E1E8EF"/><rect x="228" y="284" width="170" height="5" rx="2.5" fill="#E1E8EF"/>
+
+    <!-- Playbar -->
+    <rect x="196" y="316" width="220" height="24" rx="12" fill="#F8FAFC" stroke="#E1E8EF" stroke-width="1"/>
+    <circle cx="212" cy="328" r="7" fill="url(#h-grad1)"/>
+    <path d="M210 325 L215 328 L210 331Z" fill="white"/>
+    <rect x="226" y="326" width="140" height="4" rx="2" fill="#E1E8EF"/>
+    <rect x="226" y="326" width="60" height="4" rx="2" fill="#4A90D9"/>
+    <circle cx="286" cy="328" r="4" fill="#4A90D9"/>
+    <text x="400" y="332" text-anchor="end" font-size="7" fill="#94A3B8" font-family="Inter,sans-serif">12:34 / 45:00</text>
+
+    <!-- AI Summary card (right side, overlapping) -->
+    <g filter="url(#h-s2)">
+      <rect x="436" y="148" width="126" height="204" rx="14" fill="white"/>
+    </g>
+    <rect x="446" y="160" width="28" height="28" rx="8" fill="url(#h-grad1)"/>
+    <text x="460" y="179" text-anchor="middle" font-size="13" fill="white" font-family="Inter,sans-serif" font-weight="800">AI</text>
+    <text x="446" y="204" font-size="7.5" fill="#0F172A" font-family="Inter,sans-serif" font-weight="700">Zusammen-</text>
+    <text x="446" y="214" font-size="7.5" fill="#0F172A" font-family="Inter,sans-serif" font-weight="700">fassung</text>
+
+    <circle cx="454" cy="234" r="3" fill="#4A90D9"/><rect x="462" y="231" width="88" height="5" rx="2.5" fill="#E1E8EF"/>
+    <circle cx="454" cy="248" r="3" fill="#4A90D9"/><rect x="462" y="245" width="76" height="5" rx="2.5" fill="#E1E8EF"/>
+    <circle cx="454" cy="262" r="3" fill="#4A90D9"/><rect x="462" y="259" width="92" height="5" rx="2.5" fill="#E1E8EF"/>
+    <circle cx="454" cy="276" r="3" fill="#4A90D9"/><rect x="462" y="273" width="64" height="5" rx="2.5" fill="#E1E8EF"/>
+
+    <!-- Tags -->
+    <rect x="446" y="296" width="48" height="16" rx="8" fill="#4A90D9" opacity="0.1"/>
+    <text x="470" y="307" text-anchor="middle" font-size="6.5" fill="#4A90D9" font-family="Inter,sans-serif" font-weight="700">3 Tasks</text>
+    <rect x="498" y="296" width="52" height="16" rx="8" fill="#FF6B6B" opacity="0.1"/>
+    <text x="524" y="307" text-anchor="middle" font-size="6.5" fill="#FF6B6B" font-family="Inter,sans-serif" font-weight="700">1 Risiko</text>
+    <rect x="446" y="316" width="56" height="16" rx="8" fill="#10B981" opacity="0.1"/>
+    <text x="474" y="327" text-anchor="middle" font-size="6.5" fill="#10B981" font-family="Inter,sans-serif" font-weight="700">2 Beschl.</text>
+  </g>
+
+  <!-- Floating metric cards -->
+  <g filter="url(#h-s2)">
+    <rect x="0" y="300" width="130" height="70" rx="16" fill="url(#h-glass)" stroke="white" stroke-opacity="0.6" stroke-width="1"/>
+    <text x="20" y="328" font-size="22" fill="#1E3A5F" font-family="Inter,sans-serif" font-weight="800">71h</text>
+    <text x="20" y="344" font-size="8" fill="#475569" font-family="Inter,sans-serif" font-weight="500">pro Monat gespart</text>
+    <text x="20" y="358" font-size="7" fill="#4A90D9" font-family="Inter,sans-serif" font-weight="700">= 6.745 EUR</text>
+  </g>
+
+  <g filter="url(#h-s2)">
+    <rect x="470" y="420" width="130" height="70" rx="16" fill="url(#h-glass)" stroke="white" stroke-opacity="0.6" stroke-width="1"/>
+    <text x="490" y="448" font-size="22" fill="#1E3A5F" font-family="Inter,sans-serif" font-weight="800">47</text>
+    <text x="490" y="464" font-size="8" fill="#475569" font-family="Inter,sans-serif" font-weight="500">Meetings analysiert</text>
+    <text x="490" y="478" font-size="7" fill="#10B981" font-family="Inter,sans-serif" font-weight="700">100% durchsuchbar</text>
+  </g>
+
+  <!-- Decorative dots -->
+  <circle cx="540" cy="80" r="4" fill="#4A90D9" opacity="0.2"/><circle cx="556" cy="80" r="4" fill="#4A90D9" opacity="0.15"/><circle cx="540" cy="96" r="4" fill="#4A90D9" opacity="0.1"/>
+  <circle cx="40" cy="440" r="4" fill="#1E3A5F" opacity="0.15"/><circle cx="56" cy="440" r="4" fill="#1E3A5F" opacity="0.1"/><circle cx="40" cy="456" r="4" fill="#1E3A5F" opacity="0.08"/>
+</svg>

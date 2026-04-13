@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 420" fill="none">
+  <defs>
+    <linearGradient id="p-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1E3A5F"/><stop offset="100%" stop-color="#4A90D9"/></linearGradient>
+    <linearGradient id="p-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="white" stop-opacity="0.95"/><stop offset="100%" stop-color="white" stop-opacity="0.85"/></linearGradient>
+    <linearGradient id="p-lane1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0F2440"/><stop offset="100%" stop-color="#1E3A5F"/></linearGradient>
+    <linearGradient id="p-lane2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1E3A5F"/><stop offset="100%" stop-color="#2D5A8E"/></linearGradient>
+    <linearGradient id="p-lane3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2D5A8E"/><stop offset="100%" stop-color="#4A90D9"/></linearGradient>
+    <filter id="p-blur"><feGaussianBlur stdDeviation="40"/></filter>
+    <filter id="p-s1"><feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0F2440" flood-opacity="0.2"/></filter>
+    <filter id="p-s2"><feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#0F2440" flood-opacity="0.1"/></filter>
+    <marker id="p-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#4A90D9"/>
+    </marker>
+    <marker id="p-arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#CBD5E1"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <ellipse cx="270" cy="210" rx="260" ry="200" fill="#4A90D9" opacity="0.04" filter="url(#p-blur)"/>
+
+  <!-- Main card -->
+  <g filter="url(#p-s1)">
+    <rect x="20" y="16" width="500" height="370" rx="24" fill="url(#p-glass)" stroke="white" stroke-opacity="0.5" stroke-width="1"/>
+  </g>
+
+  <!-- Header -->
+  <rect x="36" y="32" width="32" height="32" rx="10" fill="url(#p-grad)"/>
+  <text x="52" y="53" text-anchor="middle" font-size="14" fill="white" font-family="Inter,sans-serif" font-weight="800">P</text>
+  <text x="78" y="48" font-size="13" fill="#0F172A" font-family="Inter,sans-serif" font-weight="800">Bestellprozess</text>
+  <text x="78" y="62" font-size="8.5" fill="#94A3B8" font-family="Inter,sans-serif">End-to-End &middot; Automatisch generiert</text>
+  <rect x="400" y="34" width="104" height="28" rx="14" fill="#4A90D9" opacity="0.08" stroke="#4A90D9" stroke-width="1" stroke-opacity="0.2"/>
+  <text x="452" y="52" text-anchor="middle" font-size="8.5" fill="#4A90D9" font-family="Inter,sans-serif" font-weight="700">KI-generiert &#10024;</text>
+
+  <!-- Swimlane grid -->
+  <rect x="36" y="80" width="468" height="290" rx="14" fill="white" fill-opacity="0.5" stroke="#E1E8EF" stroke-width="1"/>
+
+  <!-- Lane headers -->
+  <rect x="36" y="80" width="80" height="96" rx="14" fill="url(#p-lane1)"/>
+  <rect x="116" y="80" width="1" height="96" fill="transparent"/>
+  <text x="76" y="134" text-anchor="middle" font-size="10" fill="white" font-family="Inter,sans-serif" font-weight="700">Kunde</text>
+
+  <line x1="36" y1="176" x2="504" y2="176" stroke="#E1E8EF" stroke-width="1"/>
+  <rect x="36" y="176" width="80" height="96" fill="url(#p-lane2)"/>
+  <text x="76" y="230" text-anchor="middle" font-size="10" fill="white" font-family="Inter,sans-serif" font-weight="700">Vertrieb</text>
+
+  <line x1="36" y1="272" x2="504" y2="272" stroke="#E1E8EF" stroke-width="1"/>
+  <rect x="36" y="272" width="80" height="98" rx="0 0 0 14" fill="url(#p-lane3)"/>
+  <text x="76" y="326" text-anchor="middle" font-size="10" fill="white" font-family="Inter,sans-serif" font-weight="700">System</text>
+
+  <!-- Nodes: Kunde lane -->
+  <!-- Start node -->
+  <circle cx="150" cy="128" r="14" fill="#0F2440"/><circle cx="150" cy="128" r="8" fill="white"/><circle cx="150" cy="128" r="5" fill="#0F2440"/>
+
+  <g filter="url(#p-s2)">
+    <rect x="186" y="110" width="100" height="38" rx="10" fill="white" stroke="#1E3A5F" stroke-width="1.5"/>
+  </g>
+  <text x="236" y="134" text-anchor="middle" font-size="10" fill="#0F172A" font-family="Inter,sans-serif" font-weight="600">Anfrage</text>
+
+  <g filter="url(#p-s2)">
+    <rect x="390" y="110" width="100" height="38" rx="10" fill="white" stroke="#1E3A5F" stroke-width="1.5"/>
+  </g>
+  <text x="440" y="134" text-anchor="middle" font-size="10" fill="#0F172A" font-family="Inter,sans-serif" font-weight="600">Freigabe</text>
+
+  <!-- Nodes: Vertrieb lane -->
+  <!-- Decision diamond -->
+  <g transform="translate(236,224)" filter="url(#p-s2)">
+    <g transform="rotate(45)">
+      <rect x="-18" y="-18" width="36" height="36" rx="4" fill="white" stroke="#2D5A8E" stroke-width="1.5"/>
+    </g>
+  </g>
+  <text x="236" y="228" text-anchor="middle" font-size="9" fill="#2D5A8E" font-family="Inter,sans-serif" font-weight="800">OK?</text>
+
+  <g filter="url(#p-s2)">
+    <rect x="302" y="205" width="100" height="38" rx="10" fill="white" stroke="#2D5A8E" stroke-width="1.5"/>
+  </g>
+  <text x="352" y="228" text-anchor="middle" font-size="10" fill="#0F172A" font-family="Inter,sans-serif" font-weight="600">Angebot</text>
+
+  <!-- Nodes: System lane -->
+  <g filter="url(#p-s2)">
+    <rect x="302" y="297" width="100" height="38" rx="10" fill="white" stroke="#4A90D9" stroke-width="1.5"/>
+  </g>
+  <text x="352" y="320" text-anchor="middle" font-size="10" fill="#0F172A" font-family="Inter,sans-serif" font-weight="600">Migration</text>
+
+  <!-- End node -->
+  <circle cx="440" cy="316" r="16" fill="url(#p-grad)"/>
+  <path d="M432 316 L438 322 L450 310" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Arrows -->
+  <path d="M164 128 L186 128" stroke="#CBD5E1" stroke-width="1.5" marker-end="url(#p-arr2)"/>
+  <path d="M286 128 L390 128" stroke="#4A90D9" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#p-arr)"/>
+  <path d="M236 148 L236 199" stroke="#4A90D9" stroke-width="1.5" marker-end="url(#p-arr)"/>
+  <path d="M254 224 L302 224" stroke="#4A90D9" stroke-width="1.5" marker-end="url(#p-arr)"/>
+  <path d="M352 243 L352 297" stroke="#4A90D9" stroke-width="1.5" marker-end="url(#p-arr)"/>
+  <path d="M402 316 L424 316" stroke="#4A90D9" stroke-width="1.5" marker-end="url(#p-arr)"/>
+  <path d="M440 148 L440 205" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#p-arr2)"/>
+
+  <!-- Bottom stats -->
+  <g>
+    <rect x="136" y="382" width="90" height="26" rx="13" fill="white" stroke="#E1E8EF" stroke-width="1"/>
+    <circle cx="152" cy="395" r="4" fill="#6366F1"/>
+    <text x="188" y="399" text-anchor="middle" font-size="8" fill="#475569" font-family="Inter,sans-serif" font-weight="600">3 Rollen</text>
+
+    <rect x="234" y="382" width="100" height="26" rx="13" fill="white" stroke="#E1E8EF" stroke-width="1"/>
+    <circle cx="250" cy="395" r="4" fill="#4A90D9"/>
+    <text x="292" y="399" text-anchor="middle" font-size="8" fill="#475569" font-family="Inter,sans-serif" font-weight="600">6 Schritte</text>
+
+    <rect x="342" y="382" width="110" height="26" rx="13" fill="white" stroke="#E1E8EF" stroke-width="1"/>
+    <circle cx="358" cy="395" r="4" fill="#10B981"/>
+    <text x="404" y="399" text-anchor="middle" font-size="8" fill="#475569" font-family="Inter,sans-serif" font-weight="600">aus 4 Meetings</text>
+  </g>
+</svg>

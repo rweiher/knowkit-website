@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Build static deployment bundles for each domain.
+#
+#   ./build.sh          → builds both dist/de and dist/ai
+#   ./build.sh de       → builds only dist/de
+#   ./build.sh ai       → builds only dist/ai
+#
+# The deploy bundles contain ONLY what the public site needs:
+#   - index.html (DE) or en.html renamed to index.html (AI)
+#   - images/, js/
+#   - content.json (served at runtime for text variants)
+#   - impressum.html, datenschutz.html, robots.txt, sitemap.xml
+#
+# Editor, editor_server.py and .content-backups/ are never deployed.
+
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+PUBLIC_ASSETS=(images js content.json impressum.html datenschutz.html robots.txt sitemap.xml)
+
+build_de() {
+  echo "→ Building dist/de  (for knowkit.de)"
+  rm -rf dist/de
+  mkdir -p dist/de
+  cp index.html dist/de/index.html
+  for asset in "${PUBLIC_ASSETS[@]}"; do
+    [ -e "$asset" ] && cp -R "$asset" "dist/de/$asset"
+  done
+  echo "  ✓ dist/de ready ($(du -sh dist/de | cut -f1))"
+}
+
+build_ai() {
+  echo "→ Building dist/ai  (for knowkit.ai)"
+  rm -rf dist/ai
+  mkdir -p dist/ai
+  # English site serves en.html as index
+  cp en.html dist/ai/index.html
+  for asset in "${PUBLIC_ASSETS[@]}"; do
+    [ -e "$asset" ] && cp -R "$asset" "dist/ai/$asset"
+  done
+  echo "  ✓ dist/ai ready ($(du -sh dist/ai | cut -f1))"
+}
+
+TARGET="${1:-both}"
+
+case "$TARGET" in
+  de)   build_de ;;
+  ai)   build_ai ;;
+  both) build_de; build_ai ;;
+  *)    echo "Unknown target: $TARGET"; echo "Usage: ./build.sh [de|ai|both]"; exit 1 ;;
+esac
+
+echo
+echo "Done."

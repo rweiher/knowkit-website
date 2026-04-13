@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.knowkit.de/</loc>
+    <lastmod>2026-04-13</lastmod>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.knowkit.de/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.knowkit.ai/"/>
+  </url>
+  <url>
+    <loc>https://www.knowkit.ai/</loc>
+    <lastmod>2026-04-13</lastmod>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.knowkit.de/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.knowkit.ai/"/>
+  </url>
+  <url><loc>https://www.knowkit.de/impressum.html</loc><lastmod>2026-04-13</lastmod><priority>0.3</priority></url>
+  <url><loc>https://www.knowkit.de/datenschutz.html</loc><lastmod>2026-04-13</lastmod><priority>0.3</priority></url>
+</urlset>

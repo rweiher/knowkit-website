@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KnowKit Content Editor</title>
+  <link rel="icon" type="image/png" href="images/knowkit-logo.png"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1A6FA8', 'primary-light': '#2D8BC8', 'primary-dark': '#0E4D78',
+            accent: '#3BA8E8', 'accent-light': '#6BC1EF',
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    textarea { font-family: 'Inter', sans-serif; }
+    .save-pulse { animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .variant-tab { position: relative; }
+    .variant-tab .dot { width: 6px; height: 6px; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+<!-- Top Bar -->
+<header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+  <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
+    <div class="flex items-center gap-3">
+      <img src="images/knowkit-logo.png" alt="" class="h-8 w-auto"/>
+      <div>
+        <p class="text-sm font-bold text-slate-800">KnowKit Content Editor</p>
+        <p class="text-xs text-slate-400" id="status-line">Initialisiere…</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <!-- Language Tabs -->
+      <div class="bg-slate-100 rounded-lg p-1 flex text-sm font-medium">
+        <button data-lang-btn="de" class="px-4 py-1.5 rounded-md bg-white shadow-sm text-slate-800" onclick="switchLang('de')">🇩🇪 Deutsch</button>
+        <button data-lang-btn="en" class="px-4 py-1.5 rounded-md text-slate-500 hover:text-slate-700" onclick="switchLang('en')">🇬🇧 English</button>
+      </div>
+      <!-- Preview Link -->
+      <a id="preview-link" href="/?badge=1" target="_blank" class="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-accent transition-colors px-3 py-2">
+        <span class="material-symbols-outlined text-lg">open_in_new</span> Vorschau
+      </a>
+      <!-- Save Button -->
+      <button id="save-btn" onclick="saveContent()" class="flex items-center gap-2 bg-accent text-white px-5 py-2 rounded-lg font-semibold text-sm hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        <span class="material-symbols-outlined text-lg">save</span>
+        <span id="save-btn-text">Speichern</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Main Layout: Sidebar + Editor -->
+<div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-12 gap-6">
+
+  <!-- Section Navigation -->
+  <aside class="col-span-3 sticky top-24 self-start">
+    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Abschnitte</p>
+    <nav id="section-nav" class="space-y-1 text-sm"></nav>
+
+    <div class="mt-6 p-4 rounded-xl bg-blue-50 border border-blue-100">
+      <p class="text-xs font-bold text-blue-900 mb-2 flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">info</span> Varianten-Modus
+      </p>
+      <ul class="text-xs text-blue-800/80 space-y-1.5 leading-relaxed">
+        <li>Pro Sektion 5 Varianten <b>A – E</b>.</li>
+        <li>Nur <b>aktivierte</b> Varianten werden live angezeigt.</li>
+        <li>Bei jedem Reload rotiert die Seite durch die aktiven.</li>
+        <li>Vorschau-Link oben rechts zeigt die Varianten-Badge.</li>
+        <li>Direkter Preview einer Variante: <code class="bg-white/60 px-1 rounded">?variant=B</code></li>
+      </ul>
+    </div>
+
+    <div class="mt-4 p-4 rounded-xl bg-slate-100 border border-slate-200">
+      <p class="text-xs font-bold text-slate-700 mb-2">Rotation</p>
+      <p class="text-xs text-slate-500 mb-2">Als Nächstes zeigt die Seite Variante:</p>
+      <p class="text-2xl font-black text-accent" id="next-variant">–</p>
+      <button onclick="resetRotation()" class="mt-2 text-xs text-slate-600 hover:text-accent transition-colors flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">refresh</span> Rotation zurücksetzen
+      </button>
+    </div>
+  </aside>
+
+  <!-- Editor Form -->
+  <main class="col-span-9">
+    <div id="editor-form" class="space-y-6">
+      <p class="text-slate-400 text-sm">Lade Inhalte…</p>
+    </div>
+  </main>
+
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 hidden bg-slate-900 text-white px-5 py-3 rounded-lg shadow-2xl text-sm font-medium flex items-center gap-2 z-50">
+  <span class="material-symbols-outlined text-lg" id="toast-icon">check_circle</span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+const LETTERS = ['A', 'B', 'C', 'D', 'E'];
+const STORAGE_KEY = 'knowkit_variant_index';
+const TOTAL_SLOTS = 5;
+
+let currentLang = 'de';
+let contentData = null;
+let dirty = false;
+// active variant tab per section, e.g. { hero: 0, problem: 0, ... }
+let activeVariantIdx = {};
+
+const SECTION_LABELS = {
+  meta: { label: 'Meta / SEO', icon: 'language' },
+  nav: { label: 'Navigation', icon: 'menu' },
+  hero: { label: 'Hero (Titelseite)', icon: 'home' },
+  problem: { label: 'Problem', icon: 'report_problem' },
+  solution: { label: 'Lösung', icon: 'lightbulb' },
+  demo: { label: 'Demo / Formular', icon: 'rocket_launch' },
+  features: { label: 'Features', icon: 'auto_awesome' },
+  why: { label: 'Warum KnowKit', icon: 'workspace_premium' },
+  roi: { label: 'ROI / Rechner', icon: 'calculate' },
+  security: { label: 'Sicherheit', icon: 'shield' },
+  target: { label: 'Zielgruppen', icon: 'groups' },
+  cta_bottom: { label: 'Call-to-Action (Ende)', icon: 'touch_app' },
+  footer: { label: 'Footer', icon: 'bottom_navigation' },
+};
+
+const FIELD_LABELS = {
+  title: 'Browser-Tab-Titel', description: 'SEO-Beschreibung', og_title: 'OG-Titel (Social-Share)', og_description: 'OG-Beschreibung (Social-Share)',
+  problem: 'Problem', solution: 'Lösung', features: 'Features', roi: 'ROI', security: 'Sicherheit', demo: 'Demo', cta: 'Call-to-Action',
+  headline: 'Überschrift', headline_line1: 'Überschrift (Zeile 1)', headline_line2: 'Überschrift (Zeile 2)',
+  subline: 'Untertitel / Teaser', label: 'Label (kleine Überschrift)',
+  cta_primary: 'Button (Hauptaktion)', cta_secondary: 'Link (Nebenaktion)', cta_link: 'CTA-Link-Text',
+  copyright: 'Copyright-Zeile', tagline: 'Tagline', email: 'E-Mail',
+  link_imprint: 'Link: Impressum', link_privacy: 'Link: Datenschutz', link_other_lang: 'Link: andere Sprache',
+  calc_headline: 'Rechner-Überschrift', calc_team_label: 'Label: Teamgröße', calc_meetings_label: 'Label: Meetings/Woche', calc_rate_label: 'Label: Stundensatz',
+  calc_result_hours: 'Ergebnis-Label: Stunden', calc_result_money: 'Ergebnis-Label: Euro/Monat', calc_result_year: 'Ergebnis-Label: Euro/Jahr',
+  f4_languages_footer: 'Sprachen-Fußzeile',
+  form_name: 'Platzhalter: Name', form_company: 'Platzhalter: Unternehmen', form_email: 'Platzhalter: E-Mail', form_phone: 'Platzhalter: Telefon',
+  form_team_size_label: 'Label: Teamgröße', form_team_size_1: 'Option 1', form_team_size_2: 'Option 2', form_team_size_3: 'Option 3', form_team_size_4: 'Option 4',
+  form_use_case: 'Platzhalter: Use-Case', form_submit: 'Button-Text', form_disclaimer: 'Kleingedrucktes',
+  success_title: 'Danke-Titel', success_text: 'Danke-Text',
+};
+
+function prettyFieldKey(key) {
+  if (FIELD_LABELS[key]) return FIELD_LABELS[key];
+  let k = key.replace(/_/g, ' ')
+    .replace(/\bstat(\d+)\b/gi, 'Statistik $1')
+    .replace(/\bcard(\d+)\b/gi, 'Karte $1')
+    .replace(/\bstep(\d+)\b/gi, 'Schritt $1')
+    .replace(/\bf(\d+)\b/gi, 'Feature $1')
+    .replace(/\bbullet(\d+)\b/gi, 'Bullet $1')
+    .replace(/\bpoint(\d+)\b/gi, 'Punkt $1')
+    .replace(/\bresult(\d+)\b/gi, 'Ergebnis $1')
+    .replace(/\bitem(\d+)\b/gi, 'Punkt $1')
+    .replace(/\bgroup(\d+)\b/gi, 'Gruppe $1')
+    .replace(/\btitle\b/gi, 'Titel').replace(/\btext\b/gi, 'Text')
+    .replace(/\blabel\b/gi, 'Label').replace(/\bnumber\b/gi, 'Zahl')
+    .replace(/\bunit\b/gi, 'Einheit').replace(/\bvalue\b/gi, 'Wert');
+  return k.charAt(0).toUpperCase() + k.slice(1);
+}
+
+function setStatus(text, tone) {
+  const el = document.getElementById('status-line');
+  el.textContent = text;
+  el.className = 'text-xs ' + (tone === 'ok' ? 'text-emerald-600' : tone === 'err' ? 'text-red-600' : tone === 'busy' ? 'text-amber-600 save-pulse' : 'text-slate-400');
+}
+
+function toast(msg, ok = true) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  document.getElementById('toast-icon').textContent = ok ? 'check_circle' : 'error';
+  t.className = t.className.replace('hidden', '').replace(/bg-\S+/, ok ? 'bg-emerald-600' : 'bg-red-600');
+  t.classList.remove('hidden');
+  setTimeout(() => t.classList.add('hidden'), 2800);
+}
+
+function markDirty() {
+  dirty = true;
+  setStatus('Ungespeicherte Änderungen', 'busy');
+}
+
+function updateNextVariantIndicator() {
+  try {
+    const last = parseInt(localStorage.getItem(STORAGE_KEY) || '-1', 10);
+    const next = ((Number.isFinite(last) ? last : -1) + 1) % TOTAL_SLOTS;
+    document.getElementById('next-variant').textContent = LETTERS[next];
+  } catch {
+    document.getElementById('next-variant').textContent = '–';
+  }
+}
+
+function resetRotation() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  updateNextVariantIndicator();
+  toast('Rotation zurückgesetzt. Nächster Reload → Variante A.', true);
+}
+
+async function loadContent() {
+  try {
+    const r = await fetch('content.json?_=' + Date.now());
+    contentData = await r.json();
+    // Initialize active variant tab for each section (default 0)
+    for (const section of Object.keys(contentData[currentLang])) {
+      if (!(section in activeVariantIdx)) activeVariantIdx[section] = 0;
+    }
+    setStatus('Bereit', 'ok');
+    renderNav();
+    renderEditor();
+    updateNextVariantIndicator();
+  } catch (e) {
+    setStatus('Fehler beim Laden von content.json', 'err');
+    document.getElementById('editor-form').innerHTML = '<p class="text-red-600">content.json konnte nicht geladen werden: ' + e.message + '</p>';
+  }
+}
+
+function renderNav() {
+  const nav = document.getElementById('section-nav');
+  nav.innerHTML = '';
+  const content = contentData[currentLang];
+  Object.keys(content).forEach(section => {
+    const meta = SECTION_LABELS[section] || { label: section, icon: 'label' };
+    const activeCount = countEnabled(content[section]);
+    const a = document.createElement('a');
+    a.href = '#sec-' + section;
+    a.className = 'flex items-center gap-2 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors';
+    a.innerHTML =
+      '<span class="material-symbols-outlined text-base text-slate-400">' + meta.icon + '</span>' +
+      '<span class="flex-1">' + meta.label + '</span>' +
+      '<span class="text-[10px] font-bold ' + (activeCount > 1 ? 'text-accent bg-accent/10' : 'text-slate-400 bg-slate-100') + ' px-1.5 py-0.5 rounded">' + activeCount + '/5</span>';
+    nav.appendChild(a);
+  });
+}
+
+function countEnabled(sectionData) {
+  if (!sectionData || !Array.isArray(sectionData._variants)) return 0;
+  return sectionData._variants.filter(v => v && v._enabled).length;
+}
+
+function renderEditor() {
+  const container = document.getElementById('editor-form');
+  container.innerHTML = '';
+  const content = contentData[currentLang];
+  Object.keys(content).forEach(section => {
+    container.appendChild(renderSectionCard(section, content[section]));
+  });
+}
+
+function renderSectionCard(section, sectionData) {
+  const meta = SECTION_LABELS[section] || { label: section, icon: 'label' };
+  const activeIdx = activeVariantIdx[section] || 0;
+  const variants = sectionData._variants || [];
+
+  const card = document.createElement('section');
+  card.id = 'sec-' + section;
+  card.className = 'bg-white rounded-2xl border border-slate-200 shadow-sm scroll-mt-24';
+
+  // Header
+  const header = document.createElement('header');
+  header.className = 'flex items-center gap-3 px-6 py-4 border-b border-slate-100';
+  const enabledCount = countEnabled(sectionData);
+  header.innerHTML =
+    '<span class="material-symbols-outlined text-accent">' + meta.icon + '</span>' +
+    '<h2 class="text-base font-bold text-slate-800">' + meta.label + '</h2>' +
+    '<span class="text-xs text-slate-400 font-mono ml-auto mr-3">' + section + '</span>' +
+    '<span class="text-[11px] font-semibold ' + (enabledCount > 1 ? 'text-accent bg-accent/10' : 'text-slate-500 bg-slate-100') + ' px-2 py-1 rounded-full">' + enabledCount + ' aktiv</span>';
+  card.appendChild(header);
+
+  // Variant tabs
+  const tabsBar = document.createElement('div');
+  tabsBar.className = 'flex items-stretch border-b border-slate-100 bg-slate-50';
+  variants.forEach((v, i) => {
+    const isActive = i === activeIdx;
+    const isEnabled = v._enabled === true;
+    const btn = document.createElement('button');
+    btn.className = 'variant-tab flex-1 px-4 py-3 text-left border-r border-slate-100 last:border-r-0 hover:bg-white transition-colors ' +
+      (isActive ? 'bg-white shadow-inner' : 'bg-slate-50');
+    btn.innerHTML =
+      '<div class="flex items-center gap-2 mb-0.5">' +
+        '<span class="dot ' + (isEnabled ? 'bg-accent' : 'bg-slate-300') + '"></span>' +
+        '<span class="text-xs font-bold ' + (isActive ? 'text-slate-900' : 'text-slate-500') + '">Variante ' + LETTERS[i] + '</span>' +
+      '</div>' +
+      '<p class="text-[11px] text-slate-500 truncate" title="' + escapeHTML(v._name || '') + '">' + escapeHTML(v._name || '—') + '</p>';
+    btn.onclick = () => { activeVariantIdx[section] = i; renderEditor(); location.hash = '#sec-' + section; };
+    tabsBar.appendChild(btn);
+  });
+  card.appendChild(tabsBar);
+
+  // Variant body (enabled + name + fields)
+  const body = document.createElement('div');
+  body.className = 'p-6 space-y-5';
+
+  const variant = variants[activeIdx];
+  if (!variant) {
+    body.innerHTML = '<p class="text-slate-400 text-sm">Keine Variante.</p>';
+    card.appendChild(body);
+    return card;
+  }
+
+  // Meta row: enabled + name
+  const metaRow = document.createElement('div');
+  metaRow.className = 'flex flex-col md:flex-row md:items-center gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200';
+  metaRow.innerHTML =
+    '<label class="flex items-center gap-2 cursor-pointer select-none">' +
+      '<input type="checkbox" class="w-5 h-5 rounded text-accent focus:ring-accent" ' + (variant._enabled ? 'checked' : '') + ' id="en-' + section + '-' + activeIdx + '"/>' +
+      '<span class="text-sm font-semibold text-slate-700">Variante ' + LETTERS[activeIdx] + ' aktivieren</span>' +
+    '</label>' +
+    '<div class="flex-1">' +
+      '<label class="text-xs font-semibold text-slate-500 block mb-1">Beschreibung / Name</label>' +
+      '<input type="text" value="' + escapeAttr(variant._name || '') + '" id="nm-' + section + '-' + activeIdx + '" placeholder="z.B. ' + escapeAttr('Emotional') + '" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-800 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"/>' +
+    '</div>' +
+    '<button class="self-start md:self-auto text-xs text-slate-600 hover:text-accent flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:border-accent transition-colors" title="Inhalte aus Variante A hierher kopieren" id="cp-' + section + '-' + activeIdx + '">' +
+      '<span class="material-symbols-outlined text-base">content_copy</span> aus A kopieren' +
+    '</button>';
+  body.appendChild(metaRow);
+
+  metaRow.querySelector('#en-' + section + '-' + activeIdx).addEventListener('change', (e) => {
+    variant._enabled = e.target.checked;
+    markDirty();
+    renderNav();
+    // update the "X aktiv" badge in header immediately
+    const hdrBadge = header.querySelector('span:last-child');
+    const count = countEnabled(sectionData);
+    hdrBadge.textContent = count + ' aktiv';
+    hdrBadge.className = 'text-[11px] font-semibold ' + (count > 1 ? 'text-accent bg-accent/10' : 'text-slate-500 bg-slate-100') + ' px-2 py-1 rounded-full';
+    // update dot on tab button
+    const tabBtn = tabsBar.children[activeIdx];
+    const dot = tabBtn.querySelector('.dot');
+    if (dot) dot.className = 'dot ' + (variant._enabled ? 'bg-accent' : 'bg-slate-300');
+  });
+  metaRow.querySelector('#nm-' + section + '-' + activeIdx).addEventListener('input', (e) => {
+    variant._name = e.target.value;
+    markDirty();
+    // Update the tab label live
+    const tabBtn = tabsBar.children[activeIdx];
+    const label = tabBtn.querySelector('p');
+    if (label) label.textContent = e.target.value || '—';
+  });
+  metaRow.querySelector('#cp-' + section + '-' + activeIdx).addEventListener('click', () => {
+    if (activeIdx === 0) { toast('Variante A ist bereits die Quelle.', false); return; }
+    if (!confirm('Alle Inhalte aus Variante A in Variante ' + LETTERS[activeIdx] + ' kopieren? Dies überschreibt Felder.')) return;
+    const src = variants[0];
+    Object.keys(src).forEach(k => {
+      if (k === '_name' || k === '_enabled') return;
+      variant[k] = src[k];
+    });
+    markDirty();
+    renderEditor();
+    toast('Inhalte aus Variante A kopiert.', true);
+  });
+
+  // Content fields — nav and problem sections get specialized editors
+  if (section === 'nav') {
+    body.appendChild(renderNavEditor(section, activeIdx, variant));
+  } else if (section === 'problem') {
+    body.appendChild(renderProblemEditor(section, activeIdx, variant));
+  } else {
+    const fieldKeys = Object.keys(variant).filter(k => k !== '_name' && k !== '_enabled');
+    fieldKeys.forEach(key => {
+      body.appendChild(renderField(section, activeIdx, key, variant[key]));
+    });
+  }
+
+  card.appendChild(body);
+  return card;
+}
+
+// --- Problem-section editor: grouped into Intro + 3 Personas
+const PERSONA_ICONS = { '1': 'workspace_premium', '2': 'assignment', '3': 'engineering' };
+
+function renderProblemEditor(section, variantIdx, variant) {
+  const wrap = document.createElement('div');
+  wrap.className = 'space-y-6';
+
+  // --- Intro subsection
+  const introBox = document.createElement('div');
+  introBox.className = 'space-y-4 p-5 rounded-xl bg-slate-50 border border-slate-200';
+  introBox.appendChild(subsectionHeading('auto_awesome', 'Einleitung'));
+  ['headline_line1', 'headline_line2', 'subline', 'tiles_label'].forEach(key => {
+    if (key in variant) introBox.appendChild(renderField(section, variantIdx, key, variant[key]));
+  });
+  wrap.appendChild(introBox);
+
+  // --- 3 Persona subsections
+  ['1', '2', '3'].forEach(num => {
+    const box = document.createElement('div');
+    box.className = 'space-y-4 p-5 rounded-xl bg-white border-2 border-slate-200';
+    const roleLabel = variant['persona' + num + '_role'] || ('Persona ' + num);
+    const heading = document.createElement('div');
+    heading.className = 'flex items-center gap-3 pb-3 border-b border-slate-100';
+    heading.innerHTML =
+      '<span class="w-10 h-10 rounded-lg bg-accent/10 text-accent flex items-center justify-center shrink-0">' +
+        '<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\' 1">' + PERSONA_ICONS[num] + '</span>' +
+      '</span>' +
+      '<div class="flex-1 min-w-0">' +
+        '<p class="text-xs font-bold text-accent uppercase tracking-wider">Persona ' + num + '</p>' +
+        '<p class="text-sm font-semibold text-slate-800 truncate" id="persona-label-' + variantIdx + '-' + num + '">' + escapeHTML(roleLabel) + '</p>' +
+      '</div>';
+    box.appendChild(heading);
+
+    // Tile fields (question + role)
+    const tileGroup = document.createElement('div');
+    tileGroup.className = 'space-y-3';
+    tileGroup.appendChild(subsectionSubheading('touch_app', 'Kachel (Einstiegsfrage)'));
+    ['persona' + num + '_question', 'persona' + num + '_role'].forEach(key => {
+      if (key in variant) {
+        const f = renderField(section, variantIdx, key, variant[key]);
+        if (key.endsWith('_role')) {
+          // Keep heading label in sync live
+          const input = f.querySelector('input,textarea');
+          if (input) input.addEventListener('input', () => {
+            document.getElementById('persona-label-' + variantIdx + '-' + num).textContent = input.value || ('Persona ' + num);
+          });
+        }
+        tileGroup.appendChild(f);
+      }
+    });
+    box.appendChild(tileGroup);
+
+    // Challenge block
+    const chGroup = document.createElement('div');
+    chGroup.className = 'space-y-3 pt-3 border-t border-slate-100';
+    chGroup.appendChild(subsectionSubheading('report_problem', 'Die Herausforderung'));
+    ['_challenge_headline', '_challenge_text', '_challenge_bullet1', '_challenge_bullet2', '_challenge_bullet3'].forEach(suffix => {
+      const key = 'persona' + num + suffix;
+      if (key in variant) chGroup.appendChild(renderField(section, variantIdx, key, variant[key]));
+    });
+    box.appendChild(chGroup);
+
+    // Solution block
+    const solGroup = document.createElement('div');
+    solGroup.className = 'space-y-3 pt-3 border-t border-slate-100';
+    solGroup.appendChild(subsectionSubheading('lightbulb', 'So hilft KnowKit'));
+    ['_solution_headline', '_solution_text', '_solution_bullet1', '_solution_bullet2', '_solution_bullet3'].forEach(suffix => {
+      const key = 'persona' + num + suffix;
+      if (key in variant) solGroup.appendChild(renderField(section, variantIdx, key, variant[key]));
+    });
+    box.appendChild(solGroup);
+
+    wrap.appendChild(box);
+  });
+
+  return wrap;
+}
+
+function subsectionHeading(icon, label) {
+  const h = document.createElement('p');
+  h.className = 'flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500';
+  h.innerHTML = '<span class="material-symbols-outlined text-base text-slate-400">' + icon + '</span>' + label;
+  return h;
+}
+function subsectionSubheading(icon, label) {
+  const h = document.createElement('p');
+  h.className = 'flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-accent';
+  h.innerHTML = '<span class="material-symbols-outlined text-base">' + icon + '</span>' + label;
+  return h;
+}
+
+// --- Nav-specific editor: sortable list of items + separate CTA field
+const NAV_HREF_MAP = {
+  problem: '#problem', solution: '#loesung', features: '#features',
+  roi: '#roi', security: '#sicherheit', demo: '#demo'
+};
+
+function renderNavEditor(section, variantIdx, variant) {
+  const wrap = document.createElement('div');
+  wrap.className = 'space-y-5';
+
+  // Hint row
+  const hint = document.createElement('div');
+  hint.className = 'flex items-start gap-2 text-xs text-slate-500 bg-amber-50 border border-amber-100 rounded-lg px-4 py-3';
+  hint.innerHTML = '<span class="material-symbols-outlined text-amber-600 text-base">drag_indicator</span>' +
+    '<span>Ziehen Sie die Einträge am Griff, um die Reihenfolge zu ändern. Deaktivieren Sie Einträge mit dem Augen-Icon, um sie aus der Navigation zu entfernen.</span>';
+  wrap.appendChild(hint);
+
+  // Ensure order exists and covers all known items
+  if (!Array.isArray(variant.order)) variant.order = [];
+  // Add any known items missing from order (at the end, disabled by removal = not in order)
+  // Note: we keep user's order as source of truth; items NOT in order are considered hidden.
+  const knownKeys = Object.keys(NAV_HREF_MAP);
+  // Repair order: ensure only known keys survive
+  variant.order = variant.order.filter(k => knownKeys.includes(k));
+
+  // List label
+  const listLabel = document.createElement('div');
+  listLabel.className = 'flex items-baseline justify-between';
+  listLabel.innerHTML = '<p class="text-sm font-semibold text-slate-700">Navigations-Einträge (sichtbar)</p>' +
+    '<p class="text-[11px] text-slate-400 font-mono">order + labels</p>';
+  wrap.appendChild(listLabel);
+
+  // Sortable list container
+  const list = document.createElement('ul');
+  list.className = 'space-y-2';
+  list.dataset.navList = '';
+  wrap.appendChild(list);
+
+  // Hidden (= not in order) items shown in a separate section
+  const hiddenWrap = document.createElement('div');
+  hiddenWrap.className = 'hidden';
+  wrap.appendChild(hiddenWrap);
+
+  const renderList = () => {
+    list.innerHTML = '';
+    variant.order.forEach((key, idx) => {
+      list.appendChild(navItemRow(section, variantIdx, variant, key, idx, renderList));
+    });
+    // Hidden items
+    const hiddenKeys = knownKeys.filter(k => !variant.order.includes(k));
+    hiddenWrap.innerHTML = '';
+    if (hiddenKeys.length === 0) {
+      hiddenWrap.className = 'hidden';
+    } else {
+      hiddenWrap.className = 'pt-3 border-t border-slate-100 space-y-2';
+      const title = document.createElement('p');
+      title.className = 'text-xs font-semibold text-slate-500 uppercase tracking-wider';
+      title.textContent = 'Ausgeblendete Einträge';
+      hiddenWrap.appendChild(title);
+      hiddenKeys.forEach(key => {
+        hiddenWrap.appendChild(navHiddenRow(section, variantIdx, variant, key, renderList));
+      });
+    }
+  };
+  renderList();
+
+  // Separate CTA field (not sortable, always last and special-styled)
+  const ctaWrap = document.createElement('div');
+  ctaWrap.className = 'pt-3 border-t border-slate-100';
+  const ctaLabelRow = document.createElement('div');
+  ctaLabelRow.className = 'flex items-baseline justify-between mb-1.5';
+  ctaLabelRow.innerHTML = '<label class="text-sm font-semibold text-slate-700">Call-to-Action-Button (Ende der Nav)</label>' +
+    '<span class="text-[11px] text-slate-300 font-mono">cta</span>';
+  ctaWrap.appendChild(ctaLabelRow);
+  const ctaInput = document.createElement('input');
+  ctaInput.type = 'text';
+  ctaInput.value = variant.cta || '';
+  ctaInput.className = 'w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-800 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-colors';
+  ctaInput.addEventListener('input', () => {
+    variant.cta = ctaInput.value;
+    markDirty();
+  });
+  ctaWrap.appendChild(ctaInput);
+  wrap.appendChild(ctaWrap);
+
+  return wrap;
+}
+
+function navItemRow(section, variantIdx, variant, key, idx, rerender) {
+  const li = document.createElement('li');
+  li.draggable = true;
+  li.dataset.key = key;
+  li.className = 'flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white border border-slate-200 hover:border-accent/50 hover:shadow-sm transition-all group';
+
+  // Drag handle
+  const handle = document.createElement('span');
+  handle.className = 'material-symbols-outlined text-slate-300 group-hover:text-slate-500 cursor-grab active:cursor-grabbing';
+  handle.textContent = 'drag_indicator';
+  li.appendChild(handle);
+
+  // Index pill
+  const pill = document.createElement('span');
+  pill.className = 'text-[10px] font-bold text-accent bg-accent/10 w-6 h-6 rounded-full flex items-center justify-center shrink-0';
+  pill.textContent = String(idx + 1);
+  li.appendChild(pill);
+
+  // Key badge
+  const keyBadge = document.createElement('span');
+  keyBadge.className = 'text-[11px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded shrink-0';
+  keyBadge.textContent = '#' + (NAV_HREF_MAP[key] || key).replace(/^#/, '');
+  li.appendChild(keyBadge);
+
+  // Label input (editable)
+  const inp = document.createElement('input');
+  inp.type = 'text';
+  inp.value = variant[key] || '';
+  inp.placeholder = key;
+  inp.className = 'flex-1 px-3 py-1.5 rounded-md border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 focus:bg-white transition-colors';
+  inp.addEventListener('input', () => {
+    variant[key] = inp.value;
+    markDirty();
+  });
+  li.appendChild(inp);
+
+  // Hide button
+  const hideBtn = document.createElement('button');
+  hideBtn.className = 'p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors';
+  hideBtn.title = 'Aus Navigation entfernen';
+  hideBtn.innerHTML = '<span class="material-symbols-outlined text-base">visibility_off</span>';
+  hideBtn.addEventListener('click', () => {
+    variant.order = variant.order.filter(k => k !== key);
+    markDirty();
+    rerender();
+  });
+  li.appendChild(hideBtn);
+
+  // Up/down buttons (fallback to drag for keyboard / touch)
+  const moveWrap = document.createElement('div');
+  moveWrap.className = 'flex flex-col -gap-px';
+  const upBtn = document.createElement('button');
+  upBtn.className = 'p-0.5 rounded text-slate-400 hover:text-accent hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed';
+  upBtn.disabled = idx === 0;
+  upBtn.title = 'Nach oben';
+  upBtn.innerHTML = '<span class="material-symbols-outlined text-base">keyboard_arrow_up</span>';
+  upBtn.addEventListener('click', () => moveItem(variant, idx, idx - 1, rerender));
+  const downBtn = document.createElement('button');
+  downBtn.className = 'p-0.5 rounded text-slate-400 hover:text-accent hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed';
+  downBtn.disabled = idx === variant.order.length - 1;
+  downBtn.title = 'Nach unten';
+  downBtn.innerHTML = '<span class="material-symbols-outlined text-base">keyboard_arrow_down</span>';
+  downBtn.addEventListener('click', () => moveItem(variant, idx, idx + 1, rerender));
+  moveWrap.appendChild(upBtn); moveWrap.appendChild(downBtn);
+  li.appendChild(moveWrap);
+
+  // Drag-and-drop handlers
+  li.addEventListener('dragstart', (e) => {
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', key);
+    li.classList.add('opacity-40');
+  });
+  li.addEventListener('dragend', () => li.classList.remove('opacity-40'));
+  li.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    li.classList.add('ring-2', 'ring-accent', 'ring-offset-1');
+  });
+  li.addEventListener('dragleave', () => li.classList.remove('ring-2', 'ring-accent', 'ring-offset-1'));
+  li.addEventListener('drop', (e) => {
+    e.preventDefault();
+    li.classList.remove('ring-2', 'ring-accent', 'ring-offset-1');
+    const srcKey = e.dataTransfer.getData('text/plain');
+    if (!srcKey || srcKey === key) return;
+    const from = variant.order.indexOf(srcKey);
+    const to = variant.order.indexOf(key);
+    if (from < 0 || to < 0) return;
+    moveItem(variant, from, to, rerender);
+  });
+
+  return li;
+}
+
+function navHiddenRow(section, variantIdx, variant, key, rerender) {
+  const row = document.createElement('div');
+  row.className = 'flex items-center gap-3 px-3 py-2 rounded-lg bg-slate-50 border border-dashed border-slate-300';
+
+  const icon = document.createElement('span');
+  icon.className = 'material-symbols-outlined text-slate-400 text-base';
+  icon.textContent = 'visibility_off';
+  row.appendChild(icon);
+
+  const keyBadge = document.createElement('span');
+  keyBadge.className = 'text-[11px] font-mono text-slate-400 bg-white px-2 py-0.5 rounded border border-slate-200 shrink-0';
+  keyBadge.textContent = '#' + (NAV_HREF_MAP[key] || key).replace(/^#/, '');
+  row.appendChild(keyBadge);
+
+  const label = document.createElement('span');
+  label.className = 'flex-1 text-sm text-slate-500 italic';
+  label.textContent = variant[key] || key;
+  row.appendChild(label);
+
+  const showBtn = document.createElement('button');
+  showBtn.className = 'flex items-center gap-1 text-xs text-accent hover:text-primary font-semibold px-3 py-1 rounded-md hover:bg-white transition-colors';
+  showBtn.innerHTML = '<span class="material-symbols-outlined text-base">add</span> einblenden';
+  showBtn.addEventListener('click', () => {
+    variant.order.push(key);
+    markDirty();
+    rerender();
+  });
+  row.appendChild(showBtn);
+  return row;
+}
+
+function moveItem(variant, from, to, rerender) {
+  if (to < 0 || to >= variant.order.length) return;
+  const arr = variant.order;
+  const [moved] = arr.splice(from, 1);
+  arr.splice(to, 0, moved);
+  markDirty();
+  rerender();
+}
+
+function renderField(section, variantIdx, key, value) {
+  const path = section + '._variants[' + variantIdx + '].' + key;
+  const wrap = document.createElement('div');
+  wrap.className = 'flex flex-col gap-1.5';
+
+  const labelRow = document.createElement('div');
+  labelRow.className = 'flex items-baseline justify-between gap-3';
+  const lbl = document.createElement('label');
+  lbl.className = 'text-sm font-semibold text-slate-700';
+  lbl.textContent = prettyFieldKey(key);
+  const hint = document.createElement('span');
+  hint.className = 'text-[11px] text-slate-300 font-mono';
+  hint.textContent = key;
+  labelRow.appendChild(lbl);
+  labelRow.appendChild(hint);
+  wrap.appendChild(labelRow);
+
+  const strVal = value == null ? '' : String(value);
+  const isLong = strVal.length > 100 || strVal.includes('\n');
+  const field = document.createElement(isLong ? 'textarea' : 'input');
+  field.className = 'w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-800 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-colors';
+  if (isLong) { field.rows = Math.max(2, Math.min(6, Math.ceil(strVal.length / 70))); field.value = strVal; }
+  else { field.type = 'text'; field.value = strVal; }
+  field.addEventListener('input', () => {
+    contentData[currentLang][section]._variants[variantIdx][key] = field.value;
+    markDirty();
+  });
+  wrap.appendChild(field);
+  return wrap;
+}
+
+function escapeHTML(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function escapeAttr(s) { return String(s).replace(/"/g, '&quot;').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function switchLang(lang) {
+  if (lang === currentLang) return;
+  if (dirty && !confirm('Ungespeicherte Änderungen verwerfen und Sprache wechseln?')) return;
+  currentLang = lang;
+  dirty = false;
+  document.querySelectorAll('[data-lang-btn]').forEach(b => {
+    const isActive = b.dataset.langBtn === lang;
+    b.className = 'px-4 py-1.5 rounded-md text-sm font-medium ' +
+      (isActive ? 'bg-white shadow-sm text-slate-800' : 'text-slate-500 hover:text-slate-700');
+  });
+  document.getElementById('preview-link').href = (lang === 'en' ? 'en.html' : 'index.html') + '?badge=1';
+  document.documentElement.lang = lang;
+  loadContent();
+}
+
+async function saveContent() {
+  const btn = document.getElementById('save-btn');
+  const txt = document.getElementById('save-btn-text');
+  btn.disabled = true;
+  txt.textContent = 'Speichere…';
+  setStatus('Speichere…', 'busy');
+  try {
+    const res = await fetch('/api/save-content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(contentData, null, 2)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Unbekannter Fehler');
+    dirty = false;
+    setStatus('Gespeichert · ' + new Date().toLocaleTimeString('de-DE'), 'ok');
+    toast('Gespeichert.', true);
+  } catch (e) {
+    setStatus('Speichern fehlgeschlagen', 'err');
+    toast('Speichern fehlgeschlagen: ' + e.message, false);
+  } finally {
+    btn.disabled = false;
+    txt.textContent = 'Speichern';
+  }
+}
+
+window.addEventListener('beforeunload', (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); saveContent(); }
+});
+
+loadContent();
+// Refresh indicator every few seconds in case another tab reloaded the live page
+setInterval(updateNextVariantIndicator, 3000);
+</script>
+
+</body>
+</html>

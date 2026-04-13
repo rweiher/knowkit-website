@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>KnowKit</title>
+  <meta name="description" content=""/>
+  <meta property="og:title" content=""/>
+  <meta property="og:description" content=""/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:locale" content="en_US"/>
+  <link rel="canonical" href="https://www.knowkit.ai/"/>
+  <link rel="alternate" hreflang="de" href="https://www.knowkit.de/"/>
+  <link rel="alternate" hreflang="en" href="https://www.knowkit.ai/"/>
+  <link rel="alternate" hreflang="x-default" href="https://www.knowkit.de/"/>
+  <link rel="icon" type="image/png" href="images/knowkit-logo.png"/>
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg"/>
+  <link rel="apple-touch-icon" href="images/knowkit-logo.png"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1A6FA8', 'primary-light': '#2D8BC8', 'primary-dark': '#0E4D78',
+            accent: '#3BA8E8', 'accent-light': '#6BC1EF',
+            gray: { 50:'#FAFAFA', 100:'#F5F5F7', 200:'#E8E8ED', 300:'#D2D2D7', 400:'#86868B', 500:'#6E6E73', 600:'#1D1D1F' },
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .grad-text { background: linear-gradient(135deg, #0E4D78 0%, #3BA8E8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    [id] { scroll-margin-top: 52px; }
+    .link-arrow { transition: gap 0.3s ease; }
+    .link-arrow:hover { gap: 0.75rem; }
+  </style>
+  <script src="js/content-loader.js"></script>
+</head>
+<body class="bg-white text-gray-600">
+
+<!-- Nav -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/60">
+  <div class="max-w-[980px] mx-auto px-6 h-[52px] flex justify-between items-center">
+    <a href="#" class="flex items-center gap-2 tracking-tight">
+      <img src="images/knowkit-logo.png" alt="KnowKit Logo" class="h-8 w-auto" width="32" height="32"/>
+      <span class="text-lg font-black text-gray-600">KnowKit</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 text-xs font-medium text-gray-400">
+      <div data-nav-items class="flex items-center gap-8"></div>
+      <span class="text-gray-300">|</span>
+      <a href="https://www.knowkit.de/" class="hover:text-gray-600 transition-colors">DE</a>
+      <a href="https://www.knowkit.ai/login" class="flex items-center gap-1 hover:text-gray-600 transition-colors">
+        <span class="material-symbols-outlined text-base">login</span> Login
+      </a>
+      <a href="#demo" class="text-accent hover:text-primary transition-colors" data-content="nav.cta"></a>
+    </div>
+    <button class="md:hidden" onclick="document.getElementById('mm').classList.toggle('hidden')" aria-label="Menu">
+      <span class="material-symbols-outlined text-xl text-gray-500">menu</span>
+    </button>
+  </div>
+  <div id="mm" class="hidden md:hidden bg-white border-t border-gray-200 px-6 py-5 space-y-4 text-sm font-medium text-gray-500">
+    <div data-nav-mobile class="space-y-4"></div>
+    <a class="block" href="https://www.knowkit.ai/login">Login</a>
+    <a class="block text-accent" href="#demo" onclick="document.getElementById('mm').classList.add('hidden')" data-content="nav.cta"></a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section class="pt-[52px]">
+    <div class="bg-gray-100 py-20 md:py-32 text-center px-6">
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-gray-600 tracking-tight leading-[1.05] mb-6">
+        <span data-content="hero.headline_line1"></span><br/><span data-content="hero.headline_line2"></span>
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10" data-content="hero.subline"></p>
+      <div class="flex flex-wrap justify-center gap-5">
+        <a href="#demo" class="bg-accent text-white px-8 py-3.5 rounded-full text-lg font-semibold hover:bg-primary transition-colors" data-content="hero.cta_primary"></a>
+        <a href="#loesung" class="link-arrow inline-flex items-center gap-2 text-accent text-lg font-semibold hover:text-primary transition-colors">
+          <span data-content="hero.cta_secondary"></span> <span class="material-symbols-outlined text-xl">arrow_forward</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM / PERSONAS -->
+  <section class="py-24 md:py-36 px-6" id="problem">
+    <div class="max-w-[980px] mx-auto">
+      <h2 class="text-4xl md:text-6xl font-black text-gray-600 text-center tracking-tight leading-tight mb-8 fade-up">
+        <span data-content="problem.headline_line1"></span><br/><span data-content="problem.headline_line2"></span>
+      </h2>
+      <p class="text-xl text-gray-400 text-center max-w-2xl mx-auto leading-relaxed mb-14 fade-up" data-content="problem.subline"></p>
+
+      <p class="text-center text-xs font-semibold uppercase tracking-[0.2em] text-accent mb-5 fade-up" data-content="problem.tiles_label"></p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-14 fade-up" data-persona-tiles>
+        <button type="button" data-persona="1" class="persona-tile group text-left p-8 rounded-2xl bg-gray-100 hover:bg-accent/5 border-2 border-transparent transition-all">
+          <span class="material-symbols-outlined text-accent text-3xl mb-4" style="font-variation-settings: 'FILL' 1">workspace_premium</span>
+          <p class="text-lg font-black text-gray-600 mb-2 leading-tight" data-content="problem.persona1_question"></p>
+          <p class="text-sm text-gray-400" data-content="problem.persona1_role"></p>
+        </button>
+        <button type="button" data-persona="2" class="persona-tile group text-left p-8 rounded-2xl bg-gray-100 hover:bg-accent/5 border-2 border-transparent transition-all">
+          <span class="material-symbols-outlined text-accent text-3xl mb-4" style="font-variation-settings: 'FILL' 1">assignment</span>
+          <p class="text-lg font-black text-gray-600 mb-2 leading-tight" data-content="problem.persona2_question"></p>
+          <p class="text-sm text-gray-400" data-content="problem.persona2_role"></p>
+        </button>
+        <button type="button" data-persona="3" class="persona-tile group text-left p-8 rounded-2xl bg-gray-100 hover:bg-accent/5 border-2 border-transparent transition-all">
+          <span class="material-symbols-outlined text-accent text-3xl mb-4" style="font-variation-settings: 'FILL' 1">engineering</span>
+          <p class="text-lg font-black text-gray-600 mb-2 leading-tight" data-content="problem.persona3_question"></p>
+          <p class="text-sm text-gray-400" data-content="problem.persona3_role"></p>
+        </button>
+      </div>
+
+      <div data-persona-panels class="fade-up">
+        <div data-panel="1" class="persona-panel grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 p-8 md:p-12 rounded-2xl bg-gray-100">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-3">The challenge</p>
+            <h3 class="text-2xl md:text-3xl font-black text-gray-600 tracking-tight mb-4 leading-tight" data-content="problem.persona1_challenge_headline"></h3>
+            <p class="text-gray-400 leading-relaxed mb-5" data-content="problem.persona1_challenge_text"></p>
+            <ul class="text-gray-500 text-sm space-y-2">
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-gray-300 text-base mt-0.5">close</span> <span data-content="problem.persona1_challenge_bullet1"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-gray-300 text-base mt-0.5">close</span> <span data-content="problem.persona1_challenge_bullet2"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-gray-300 text-base mt-0.5">close</span> <span data-content="problem.persona1_challenge_bullet3"></span></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-3">How KnowKit helps</p>
+            <h3 class="text-2xl md:text-3xl font-black text-gray-600 tracking-tight mb-4 leading-tight" data-content="problem.persona1_solution_headline"></h3>
+            <p class="text-gray-400 leading-relaxed mb-5" data-content="problem.persona1_solution_text"></p>
+            <ul class="text-gray-600 text-sm space-y-2">
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="problem.persona1_solution_bullet1"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="problem.persona1_solution_bullet2"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="problem.persona1_solution_bullet3"></span></li>
+            </ul>
+          </div>
+        </div>
+        <div data-panel="2" class="persona-panel hidden grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 p-8 md:p-12 rounded-2xl bg-gray-100">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-3">The challenge</p>
+            <h3 class="text-2xl md:text-3xl font-black text-gray-600 tracking-tight mb-4 leading-tight" data-content="problem.persona2_challenge_headline"></h3>
+            <p class="text-gray-400 leading-relaxed mb-5" data-content="problem.persona2_challenge_text"></p>
+            <ul class="text-gray-500 text-sm space-y-2">
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-gray-300 text-base mt-0.5">close</span> <span data-content="problem.persona2_challenge_bullet1"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-gray-300 text-base mt-0.5">close</span> <span data-content="problem.persona2_challenge_bullet2"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-gray-300 text-base mt-0.5">close</span> <span data-content="problem.persona2_challenge_bullet3"></span></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-3">How KnowKit helps</p>
+            <h3 class="text-2xl md:text-3xl font-black text-gray-600 tracking-tight mb-4 leading-tight" data-content="problem.persona2_solution_headline"></h3>
+            <p class="text-gray-400 leading-relaxed mb-5" data-content="problem.persona2_solution_text"></p>
+            <ul class="text-gray-600 text-sm space-y-2">
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="problem.persona2_solution_bullet1"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="problem.persona2_solution_bullet2"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="problem.persona2_solution_bullet3"></span></li>
+            </ul>
+          </div>
+        </div>
+        <div data-panel="3" class="persona-panel hidden grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 p-8 md:p-12 rounded-2xl bg-gray-100">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-3">The challenge</p>
+            <h3 class="text-2xl md:text-3xl font-black text-gray-600 tracking-tight mb-4 leading-tight" data-content="problem.persona3_challenge_headline"></h3>
+            <p class="text-gray-400 leading-relaxed mb-5" data-content="problem.persona3_challenge_text"></p>
+            <ul class="text-gray-500 text-sm space-y-2">
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-gray-300 text-base mt-0.5">close</span> <span data-content="problem.persona3_challenge_bullet1"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-gray-300 text-base mt-0.5">close</span> <span data-content="problem.persona3_challenge_bullet2"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-gray-300 text-base mt-0.5">close</span> <span data-content="problem.persona3_challenge_bullet3"></span></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-3">How KnowKit helps</p>
+            <h3 class="text-2xl md:text-3xl font-black text-gray-600 tracking-tight mb-4 leading-tight" data-content="problem.persona3_solution_headline"></h3>
+            <p class="text-gray-400 leading-relaxed mb-5" data-content="problem.persona3_solution_text"></p>
+            <ul class="text-gray-600 text-sm space-y-2">
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="problem.persona3_solution_bullet1"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="problem.persona3_solution_bullet2"></span></li>
+              <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="problem.persona3_solution_bullet3"></span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section class="bg-gray-600 text-white py-24 md:py-36 px-6" id="loesung">
+    <div class="max-w-[980px] mx-auto text-center">
+      <p class="text-accent text-sm font-semibold uppercase tracking-[0.2em] mb-6 fade-up" data-content="solution.label"></p>
+      <h2 class="text-4xl md:text-6xl font-black tracking-tight leading-tight mb-8 fade-up" data-content="solution.headline"></h2>
+      <p class="text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-20 fade-up" data-content="solution.subline"></p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 max-w-4xl mx-auto fade-up">
+        <div>
+          <span class="material-symbols-outlined text-accent text-4xl mb-4" style="font-variation-settings: 'FILL' 1">hub</span>
+          <p class="text-lg font-semibold mb-2" data-content="solution.card1_title"></p>
+          <p class="text-white/40 text-sm leading-relaxed" data-content="solution.card1_text"></p>
+        </div>
+        <div>
+          <span class="material-symbols-outlined text-accent text-4xl mb-4" style="font-variation-settings: 'FILL' 1">translate</span>
+          <p class="text-lg font-semibold mb-2" data-content="solution.card2_title"></p>
+          <p class="text-white/40 text-sm leading-relaxed" data-content="solution.card2_text"></p>
+        </div>
+        <div>
+          <span class="material-symbols-outlined text-accent text-4xl mb-4" style="font-variation-settings: 'FILL' 1">account_tree</span>
+          <p class="text-lg font-semibold mb-2" data-content="solution.card3_title"></p>
+          <p class="text-white/40 text-sm leading-relaxed" data-content="solution.card3_text"></p>
+        </div>
+        <div>
+          <span class="material-symbols-outlined text-accent text-4xl mb-4" style="font-variation-settings: 'FILL' 1">smart_toy</span>
+          <p class="text-lg font-semibold mb-2" data-content="solution.card4_title"></p>
+          <p class="text-white/40 text-sm leading-relaxed" data-content="solution.card4_text"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="bg-gray-600 text-white py-24 md:py-36 px-6">
+    <div class="max-w-[980px] mx-auto">
+      <p class="text-accent text-sm font-semibold uppercase tracking-[0.2em] text-center mb-6 fade-up" data-content="why.label"></p>
+      <h2 class="text-4xl md:text-5xl font-black text-center tracking-tight leading-tight mb-20 fade-up" data-content="why.headline"></h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 fade-up">
+        <div class="space-y-8">
+          <div>
+            <p class="font-bold text-white mb-2" data-content="why.point1_title"></p>
+            <p class="text-white/40 text-sm leading-relaxed" data-content="why.point1_text"></p>
+          </div>
+          <div>
+            <p class="font-bold text-white mb-2" data-content="why.point2_title"></p>
+            <p class="text-white/40 text-sm leading-relaxed" data-content="why.point2_text"></p>
+          </div>
+          <div>
+            <p class="font-bold text-white mb-2" data-content="why.point3_title"></p>
+            <p class="text-white/40 text-sm leading-relaxed" data-content="why.point3_text"></p>
+          </div>
+        </div>
+        <div class="space-y-8">
+          <div>
+            <p class="font-bold text-white mb-2" data-content="why.point4_title"></p>
+            <p class="text-white/40 text-sm leading-relaxed" data-content="why.point4_text"></p>
+          </div>
+          <div>
+            <p class="font-bold text-white mb-2" data-content="why.point5_title"></p>
+            <p class="text-white/40 text-sm leading-relaxed" data-content="why.point5_text"></p>
+          </div>
+          <div>
+            <p class="font-bold text-white mb-2" data-content="why.point6_title"></p>
+            <p class="text-white/40 text-sm leading-relaxed" data-content="why.point6_text"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROI -->
+  <section class="bg-gray-100 py-24 md:py-36 px-6" id="roi">
+    <div class="max-w-[980px] mx-auto">
+      <h2 class="text-4xl md:text-6xl font-black text-gray-600 text-center tracking-tight mb-6 fade-up" data-content="roi.headline"></h2>
+      <p class="text-xl text-gray-400 text-center max-w-xl mx-auto mb-20 fade-up" data-content="roi.subline"></p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-0 bg-white rounded-2xl overflow-hidden fade-up">
+        <div class="text-center p-12 border-b md:border-b-0 md:border-r border-gray-200">
+          <p class="text-5xl md:text-6xl font-black grad-text mb-3"><span data-content="roi.result1_value"></span><span class="text-2xl" data-content="roi.result1_unit"></span></p>
+          <p class="text-gray-400 text-sm" data-content="roi.result1_label"></p>
+        </div>
+        <div class="text-center p-12 border-b md:border-b-0 md:border-r border-gray-200">
+          <p class="text-5xl md:text-6xl font-black grad-text mb-3"><span data-content="roi.result2_value"></span><span class="text-2xl" data-content="roi.result2_unit"></span></p>
+          <p class="text-gray-400 text-sm" data-content="roi.result2_label"></p>
+        </div>
+        <div class="text-center p-12">
+          <p class="text-5xl md:text-6xl font-black grad-text mb-3"><span data-content="roi.result3_value"></span><span class="text-2xl" data-content="roi.result3_unit"></span></p>
+          <p class="text-gray-400 text-sm" data-content="roi.result3_label"></p>
+        </div>
+      </div>
+
+      <!-- Calculator -->
+      <div class="mt-16 bg-white rounded-2xl p-10 md:p-14 fade-up">
+        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-8" data-content="roi.calc_headline"></p>
+        <div class="space-y-8 mb-10">
+          <div>
+            <label class="flex justify-between mb-3"><span class="text-sm font-medium text-gray-500" data-content="roi.calc_team_label"></span><span id="val-team" class="text-sm font-bold text-gray-600">10</span></label>
+            <input type="range" id="calc-team" min="3" max="50" value="10" class="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer accent-accent" oninput="calcROI()"/>
+          </div>
+          <div>
+            <label class="flex justify-between mb-3"><span class="text-sm font-medium text-gray-500" data-content="roi.calc_meetings_label"></span><span id="val-meetings" class="text-sm font-bold text-gray-600">4</span></label>
+            <input type="range" id="calc-meetings" min="1" max="20" value="4" class="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer accent-accent" oninput="calcROI()"/>
+          </div>
+          <div>
+            <label class="flex justify-between mb-3"><span class="text-sm font-medium text-gray-500" data-content="roi.calc_rate_label"></span><span id="val-rate" class="text-sm font-bold text-gray-600">95</span></label>
+            <input type="range" id="calc-rate" min="50" max="200" step="5" value="95" class="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer accent-accent" oninput="calcROI()"/>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 divide-x divide-gray-200 text-center pt-8 border-t border-gray-200">
+          <div>
+            <p class="text-3xl font-black text-gray-600" id="calc-hours">71</p>
+            <p class="text-gray-400 text-xs mt-1" data-content="roi.calc_result_hours"></p>
+          </div>
+          <div>
+            <p class="text-3xl font-black text-gray-600" id="calc-money">6,745</p>
+            <p class="text-gray-400 text-xs mt-1" data-content="roi.calc_result_money"></p>
+          </div>
+          <div>
+            <p class="text-3xl font-black text-gray-600" id="calc-year">80,940</p>
+            <p class="text-gray-400 text-xs mt-1" data-content="roi.calc_result_year"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="py-24 md:py-36 px-6" id="features">
+    <div class="max-w-[980px] mx-auto">
+      <h2 class="text-4xl md:text-6xl font-black text-gray-600 text-center tracking-tight leading-tight mb-6 fade-up" data-content="features.headline"></h2>
+      <p class="text-xl text-gray-400 text-center max-w-2xl mx-auto mb-24 fade-up" data-content="features.subline"></p>
+
+      <!-- Feature 1 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24 lg:mb-36">
+        <div class="fade-up">
+          <p class="text-accent text-sm font-semibold uppercase tracking-[0.15em] mb-3" data-content="features.f1_label"></p>
+          <h3 class="text-3xl md:text-4xl font-black text-gray-600 tracking-tight mb-6" data-content="features.f1_title"></h3>
+          <p class="text-lg text-gray-400 leading-relaxed mb-4" data-content="features.f1_text"></p>
+          <ul class="text-gray-400 text-sm space-y-2 mb-6">
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f1_bullet1"></span></li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f1_bullet2"></span></li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f1_bullet3"></span></li>
+          </ul>
+          <a href="#demo" class="link-arrow inline-flex items-center gap-2 text-accent font-semibold hover:text-primary transition-colors">
+            <span data-content="features.cta_link"></span> <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </a>
+        </div>
+        <div class="fade-up rounded-2xl bg-gray-100 p-8">
+          <img src="images/meeting-bot.svg" alt="" class="w-full"/>
+        </div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24 lg:mb-36">
+        <div class="order-2 lg:order-1 fade-up rounded-2xl bg-gray-100 p-8">
+          <img src="images/ai-chat.svg" alt="" class="w-full"/>
+        </div>
+        <div class="order-1 lg:order-2 fade-up">
+          <p class="text-accent text-sm font-semibold uppercase tracking-[0.15em] mb-3" data-content="features.f2_label"></p>
+          <h3 class="text-3xl md:text-4xl font-black text-gray-600 tracking-tight mb-6" data-content="features.f2_title"></h3>
+          <p class="text-lg text-gray-400 leading-relaxed mb-4" data-content="features.f2_text"></p>
+          <ul class="text-gray-400 text-sm space-y-2 mb-6">
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f2_bullet1"></span></li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f2_bullet2"></span></li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f2_bullet3"></span></li>
+          </ul>
+          <a href="#demo" class="link-arrow inline-flex items-center gap-2 text-accent font-semibold hover:text-primary transition-colors">
+            <span data-content="features.cta_link"></span> <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24 lg:mb-36">
+        <div class="fade-up">
+          <p class="text-accent text-sm font-semibold uppercase tracking-[0.15em] mb-3" data-content="features.f3_label"></p>
+          <h3 class="text-3xl md:text-4xl font-black text-gray-600 tracking-tight mb-6" data-content="features.f3_title"></h3>
+          <p class="text-lg text-gray-400 leading-relaxed mb-4" data-content="features.f3_text"></p>
+          <ul class="text-gray-400 text-sm space-y-2 mb-6">
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f3_bullet1"></span></li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f3_bullet2"></span></li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f3_bullet3"></span></li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f3_bullet4"></span></li>
+          </ul>
+          <a href="#demo" class="link-arrow inline-flex items-center gap-2 text-accent font-semibold hover:text-primary transition-colors">
+            <span data-content="features.cta_link"></span> <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </a>
+        </div>
+        <div class="fade-up rounded-2xl bg-gray-100 p-8">
+          <img src="images/process-diagram.svg" alt="" class="w-full"/>
+        </div>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div class="order-2 lg:order-1 fade-up rounded-2xl bg-gray-100 p-10 text-center">
+          <div class="grid grid-cols-3 gap-4 max-w-xs mx-auto">
+            <div class="bg-white rounded-xl p-4 shadow-sm"><p class="text-2xl mb-1">🇩🇪</p><p class="text-xs text-gray-400 font-medium">Deutsch</p></div>
+            <div class="bg-white rounded-xl p-4 shadow-sm"><p class="text-2xl mb-1">🇬🇧</p><p class="text-xs text-gray-400 font-medium">English</p></div>
+            <div class="bg-white rounded-xl p-4 shadow-sm"><p class="text-2xl mb-1">🇫🇷</p><p class="text-xs text-gray-400 font-medium">Français</p></div>
+            <div class="bg-white rounded-xl p-4 shadow-sm"><p class="text-2xl mb-1">🇪🇸</p><p class="text-xs text-gray-400 font-medium">Español</p></div>
+            <div class="bg-white rounded-xl p-4 shadow-sm"><p class="text-2xl mb-1">🇮🇹</p><p class="text-xs text-gray-400 font-medium">Italiano</p></div>
+            <div class="bg-white rounded-xl p-4 shadow-sm"><p class="text-2xl mb-1">🇮🇳</p><p class="text-xs text-gray-400 font-medium">हिन्दी</p></div>
+          </div>
+          <p class="text-gray-300 text-xs mt-4" data-content="features.f4_languages_footer"></p>
+        </div>
+        <div class="order-1 lg:order-2 fade-up">
+          <p class="text-accent text-sm font-semibold uppercase tracking-[0.15em] mb-3" data-content="features.f4_label"></p>
+          <h3 class="text-3xl md:text-4xl font-black text-gray-600 tracking-tight mb-6" data-content="features.f4_title"></h3>
+          <p class="text-lg text-gray-400 leading-relaxed mb-4" data-content="features.f4_text"></p>
+          <ul class="text-gray-400 text-sm space-y-2 mb-6">
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f4_bullet1"></span></li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f4_bullet2"></span></li>
+            <li class="flex items-start gap-2"><span class="material-symbols-outlined text-accent text-base mt-0.5">check</span> <span data-content="features.f4_bullet3"></span></li>
+          </ul>
+          <a href="#demo" class="link-arrow inline-flex items-center gap-2 text-accent font-semibold hover:text-primary transition-colors">
+            <span data-content="features.cta_link"></span> <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECURITY -->
+  <section class="py-24 md:py-36 px-6" id="sicherheit">
+    <div class="max-w-[980px] mx-auto">
+      <h2 class="text-4xl md:text-6xl font-black text-gray-600 text-center tracking-tight mb-6 fade-up" data-content="security.headline"></h2>
+      <p class="text-xl text-gray-400 text-center max-w-xl mx-auto mb-20 fade-up" data-content="security.subline"></p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-16 fade-up">
+        <div>
+          <p class="font-bold text-gray-600 mb-1" data-content="security.item1_title"></p>
+          <p class="text-gray-400 text-sm" data-content="security.item1_text"></p>
+        </div>
+        <div>
+          <p class="font-bold text-gray-600 mb-1" data-content="security.item2_title"></p>
+          <p class="text-gray-400 text-sm" data-content="security.item2_text"></p>
+        </div>
+        <div>
+          <p class="font-bold text-gray-600 mb-1" data-content="security.item3_title"></p>
+          <p class="text-gray-400 text-sm" data-content="security.item3_text"></p>
+        </div>
+        <div>
+          <p class="font-bold text-gray-600 mb-1" data-content="security.item4_title"></p>
+          <p class="text-gray-400 text-sm" data-content="security.item4_text"></p>
+        </div>
+        <div>
+          <p class="font-bold text-gray-600 mb-1" data-content="security.item5_title"></p>
+          <p class="text-gray-400 text-sm" data-content="security.item5_text"></p>
+        </div>
+        <div>
+          <p class="font-bold text-gray-600 mb-1" data-content="security.item6_title"></p>
+          <p class="text-gray-400 text-sm" data-content="security.item6_text"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TARGET -->
+  <section class="bg-gray-100 py-24 md:py-36 px-6">
+    <div class="max-w-[980px] mx-auto text-center">
+      <h2 class="text-4xl md:text-5xl font-black text-gray-600 tracking-tight leading-tight mb-6 fade-up" data-content="target.headline"></h2>
+      <p class="text-xl text-gray-400 max-w-xl mx-auto mb-16 fade-up" data-content="target.subline"></p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left fade-up">
+        <div class="bg-white rounded-2xl p-8">
+          <span class="material-symbols-outlined text-accent text-3xl mb-4" style="font-variation-settings: 'FILL' 1">engineering</span>
+          <p class="font-bold text-gray-600 mb-2" data-content="target.group1_title"></p>
+          <p class="text-gray-400 text-sm" data-content="target.group1_text"></p>
+        </div>
+        <div class="bg-white rounded-2xl p-8">
+          <span class="material-symbols-outlined text-accent text-3xl mb-4" style="font-variation-settings: 'FILL' 1">domain</span>
+          <p class="font-bold text-gray-600 mb-2" data-content="target.group2_title"></p>
+          <p class="text-gray-400 text-sm" data-content="target.group2_text"></p>
+        </div>
+        <div class="bg-white rounded-2xl p-8">
+          <span class="material-symbols-outlined text-accent text-3xl mb-4" style="font-variation-settings: 'FILL' 1">school</span>
+          <p class="font-bold text-gray-600 mb-2" data-content="target.group3_title"></p>
+          <p class="text-gray-400 text-sm" data-content="target.group3_text"></p>
+        </div>
+        <div class="bg-white rounded-2xl p-8">
+          <span class="material-symbols-outlined text-accent text-3xl mb-4" style="font-variation-settings: 'FILL' 1">public</span>
+          <p class="font-bold text-gray-600 mb-2" data-content="target.group4_title"></p>
+          <p class="text-gray-400 text-sm" data-content="target.group4_text"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section class="bg-gray-100 py-24 md:py-36 px-6" id="demo">
+    <div class="max-w-[980px] mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+        <div class="fade-up">
+          <h2 class="text-4xl md:text-5xl font-black text-gray-600 tracking-tight leading-tight mb-6">
+            <span data-content="demo.headline_line1"></span><br/><span data-content="demo.headline_line2"></span>
+          </h2>
+          <p class="text-lg text-gray-400 leading-relaxed mb-12" data-content="demo.subline"></p>
+          <div class="space-y-8">
+            <div class="flex gap-5">
+              <div class="text-2xl font-black text-gray-300 w-8 shrink-0">1</div>
+              <div>
+                <p class="font-semibold text-gray-600" data-content="demo.step1_title"></p>
+                <p class="text-gray-400 text-sm mt-1" data-content="demo.step1_text"></p>
+              </div>
+            </div>
+            <div class="flex gap-5">
+              <div class="text-2xl font-black text-gray-300 w-8 shrink-0">2</div>
+              <div>
+                <p class="font-semibold text-gray-600" data-content="demo.step2_title"></p>
+                <p class="text-gray-400 text-sm mt-1" data-content="demo.step2_text"></p>
+              </div>
+            </div>
+            <div class="flex gap-5">
+              <div class="text-2xl font-black text-gray-300 w-8 shrink-0">3</div>
+              <div>
+                <p class="font-semibold text-gray-600" data-content="demo.step3_title"></p>
+                <p class="text-gray-400 text-sm mt-1" data-content="demo.step3_text"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fade-up" style="transition-delay: 0.15s;">
+          <form id="demo-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="space-y-4">
+            <input type="text" name="name" required data-content-placeholder="demo.form_name" class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-600 placeholder-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"/>
+            <input type="text" name="company" required data-content-placeholder="demo.form_company" class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-600 placeholder-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"/>
+            <input type="email" name="email" required data-content-placeholder="demo.form_email" class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-600 placeholder-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"/>
+            <input type="tel" name="phone" data-content-placeholder="demo.form_phone" class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-600 placeholder-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"/>
+            <select name="team_size" required class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors appearance-none">
+              <option value="" disabled selected data-content="demo.form_team_size_label"></option>
+              <option value="1-10" data-content="demo.form_team_size_1"></option>
+              <option value="11-50" data-content="demo.form_team_size_2"></option>
+              <option value="51-200" data-content="demo.form_team_size_3"></option>
+              <option value="200+" data-content="demo.form_team_size_4"></option>
+            </select>
+            <textarea name="use_case" rows="3" data-content-placeholder="demo.form_use_case" class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-600 placeholder-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors resize-none"></textarea>
+            <input type="hidden" name="_subject" value="KnowKit Demo Request"/>
+            <button type="submit" id="demo-submit-btn" class="w-full bg-accent text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary transition-colors">
+              <span data-content="demo.form_submit"></span>
+            </button>
+            <p class="text-gray-300 text-xs text-center" data-content="demo.form_disclaimer"></p>
+          </form>
+          <div id="demo-form-success" class="hidden p-8 rounded-xl bg-white border border-gray-200 text-center">
+            <p class="text-2xl font-bold text-gray-600 mb-2" data-content="demo.success_title"></p>
+            <p class="text-gray-400" data-content="demo.success_text"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <section class="bg-gray-600 py-24 md:py-36 px-6">
+    <div class="max-w-[980px] mx-auto text-center">
+      <h2 class="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight mb-6 fade-up" data-content="cta_bottom.headline"></h2>
+      <p class="text-xl text-white/50 max-w-lg mx-auto mb-10 fade-up" data-content="cta_bottom.subline"></p>
+      <div class="flex flex-wrap justify-center gap-5 fade-up">
+        <a href="#demo" class="bg-white text-gray-600 px-8 py-3.5 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors" data-content="cta_bottom.cta_primary"></a>
+        <a href="mailto:info@h2w-consulting.com" class="link-arrow inline-flex items-center gap-2 text-white/60 text-lg font-semibold hover:text-white transition-colors">
+          <span data-content="cta_bottom.cta_secondary"></span> <span class="material-symbols-outlined text-lg">arrow_forward</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-100 py-12 px-6">
+  <div class="max-w-[980px] mx-auto">
+    <div class="flex flex-col md:flex-row justify-between gap-8 text-xs text-gray-400">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <img src="images/knowkit-logo.png" alt="KnowKit Logo" class="h-6 w-auto"/>
+          <p class="text-gray-500 font-semibold">KnowKit</p>
+        </div>
+        <p data-content="footer.tagline"></p>
+        <p class="mt-1"><a href="mailto:info@h2w-consulting.com" class="hover:text-gray-600 transition-colors" data-content="footer.email"></a></p>
+      </div>
+      <div class="flex gap-8">
+        <a href="impressum.html" class="hover:text-gray-600 transition-colors" data-content="footer.link_imprint"></a>
+        <a href="datenschutz.html" class="hover:text-gray-600 transition-colors" data-content="footer.link_privacy"></a>
+        <a href="https://www.knowkit.de/" class="hover:text-gray-600 transition-colors" data-content="footer.link_other_lang"></a>
+      </div>
+    </div>
+    <div class="border-t border-gray-200 mt-8 pt-6 text-xs text-gray-300">
+      <p data-content="footer.copyright"></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+// Persona switcher
+function selectPersona(n) {
+  document.querySelectorAll('[data-persona]').forEach(t => {
+    const isActive = t.dataset.persona === n;
+    t.classList.toggle('bg-accent/10', isActive);
+    t.classList.toggle('border-accent', isActive);
+    t.classList.toggle('bg-gray-100', !isActive);
+    t.classList.toggle('border-transparent', !isActive);
+  });
+  document.querySelectorAll('[data-panel]').forEach(p => {
+    const isActive = p.dataset.panel === n;
+    p.classList.toggle('hidden', !isActive);
+    p.classList.toggle('grid', isActive);
+  });
+}
+document.querySelectorAll('[data-persona]').forEach(t => {
+  t.addEventListener('click', () => selectPersona(t.dataset.persona));
+});
+selectPersona('1');
+
+// Demo form
+const df = document.getElementById('demo-form');
+if (df) {
+  df.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('demo-submit-btn');
+    btn.querySelector('span').textContent = 'Sending...';
+    try {
+      const r = await fetch(df.action, { method: 'POST', body: new FormData(df), headers: { 'Accept': 'application/json' } });
+      if (r.ok) { df.classList.add('hidden'); document.getElementById('demo-form-success').classList.remove('hidden'); }
+      else { btn.querySelector('span').textContent = 'Error — please use email'; }
+    } catch { btn.querySelector('span').textContent = 'Error — please use email'; }
+  });
+}
+
+// ROI Calculator
+function calcROI() {
+  const t = parseInt(document.getElementById('calc-team').value);
+  const m = parseInt(document.getElementById('calc-meetings').value);
+  const r = parseInt(document.getElementById('calc-rate').value);
+  document.getElementById('val-team').textContent = t;
+  document.getElementById('val-meetings').textContent = m;
+  document.getElementById('val-rate').textContent = r;
+  const f = (t / 10) * (m / 4);
+  const h = Math.round(71 * f);
+  const money = Math.round(h * r);
+  const locale = document.documentElement.lang === 'en' ? 'en-US' : 'de-DE';
+  document.getElementById('calc-hours').textContent = h.toLocaleString(locale);
+  document.getElementById('calc-money').textContent = money.toLocaleString(locale);
+  document.getElementById('calc-year').textContent = (money * 12).toLocaleString(locale);
+}
+calcROI();
+</script>
+
+</body>
+</html>

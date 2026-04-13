@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 420" fill="none">
+  <defs>
+    <linearGradient id="m-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1E3A5F"/><stop offset="100%" stop-color="#4A90D9"/></linearGradient>
+    <linearGradient id="m-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="white" stop-opacity="0.95"/><stop offset="100%" stop-color="white" stop-opacity="0.85"/></linearGradient>
+    <linearGradient id="m-vid" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#162D50"/><stop offset="100%" stop-color="#0C1B33"/></linearGradient>
+    <filter id="m-blur"><feGaussianBlur stdDeviation="40"/></filter>
+    <filter id="m-s1"><feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0F2440" flood-opacity="0.2"/></filter>
+    <filter id="m-s2"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0F2440" flood-opacity="0.12"/></filter>
+  </defs>
+
+  <!-- Background blobs -->
+  <ellipse cx="270" cy="210" rx="240" ry="180" fill="#1E3A5F" opacity="0.04" filter="url(#m-blur)"/>
+  <ellipse cx="420" cy="120" rx="120" ry="100" fill="#4A90D9" opacity="0.06" filter="url(#m-blur)"/>
+
+  <!-- Main video window -->
+  <g filter="url(#m-s1)">
+    <rect x="40" y="24" width="460" height="320" rx="20" fill="url(#m-glass)" stroke="white" stroke-opacity="0.5" stroke-width="1"/>
+  </g>
+  <!-- Top bar -->
+  <rect x="40" y="24" width="460" height="48" rx="20" fill="white" fill-opacity="0.7"/>
+  <rect x="40" y="56" width="460" height="16" fill="white" fill-opacity="0.7"/>
+  <circle cx="68" cy="48" r="6" fill="#FF6B6B"/><circle cx="88" cy="48" r="6" fill="#FFD93D"/><circle cx="108" cy="48" r="6" fill="#6BCB77"/>
+  <text x="270" y="53" text-anchor="middle" font-size="10" fill="#475569" font-family="Inter,sans-serif" font-weight="600">Projekt-Workshop — ERP-Migration</text>
+  <rect x="420" y="38" width="60" height="22" rx="11" fill="#FF6B6B" opacity="0.1"/>
+  <circle cx="436" cy="49" r="4" fill="#FF6B6B"><animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite"/></circle>
+  <text x="460" y="53" font-size="8" fill="#FF6B6B" font-family="Inter,sans-serif" font-weight="700">REC</text>
+
+  <!-- Video grid -->
+  <!-- Person 1 -->
+  <rect x="56" y="80" width="208" height="120" rx="12" fill="url(#m-vid)"/>
+  <circle cx="160" cy="128" r="28" fill="#6366F1" opacity="0.8"/>
+  <text x="160" y="124" text-anchor="middle" font-size="24" fill="white" opacity="0.9">&#129489;</text>
+  <rect x="112" y="172" width="96" height="20" rx="10" fill="black" fill-opacity="0.4"/>
+  <text x="160" y="186" text-anchor="middle" font-size="9" fill="white" font-family="Inter,sans-serif" font-weight="500">Thomas Mueller</text>
+  <!-- Mic indicator -->
+  <rect x="232" y="88" width="22" height="22" rx="11" fill="black" fill-opacity="0.3"/>
+  <rect x="240" y="94" width="6" height="10" rx="3" fill="#6BCB77"/>
+
+  <!-- Person 2 -->
+  <rect x="276" y="80" width="208" height="120" rx="12" fill="url(#m-vid)"/>
+  <circle cx="380" cy="128" r="28" fill="#F59E0B" opacity="0.8"/>
+  <text x="380" y="124" text-anchor="middle" font-size="24" fill="white" opacity="0.9">&#129489;</text>
+  <rect x="336" y="172" width="88" height="20" rx="10" fill="black" fill-opacity="0.4"/>
+  <text x="380" y="186" text-anchor="middle" font-size="9" fill="white" font-family="Inter,sans-serif" font-weight="500">Sabine Kaiser</text>
+
+  <!-- Person 3 -->
+  <rect x="56" y="208" width="208" height="120" rx="12" fill="url(#m-vid)"/>
+  <circle cx="160" cy="256" r="28" fill="#10B981" opacity="0.8"/>
+  <text x="160" y="252" text-anchor="middle" font-size="24" fill="white" opacity="0.9">&#129489;</text>
+  <rect x="116" y="300" width="88" height="20" rx="10" fill="black" fill-opacity="0.4"/>
+  <text x="160" y="314" text-anchor="middle" font-size="9" fill="white" font-family="Inter,sans-serif" font-weight="500">Markus Lang</text>
+
+  <!-- KnowKit Bot (highlighted) -->
+  <rect x="276" y="208" width="208" height="120" rx="12" fill="#0F2440" stroke="#4A90D9" stroke-width="2"/>
+  <rect x="276" y="208" width="208" height="120" rx="12" fill="#4A90D9" opacity="0.05"/>
+  <rect x="348" y="238" width="64" height="40" rx="12" fill="url(#m-grad)"/>
+  <text x="380" y="256" text-anchor="middle" font-size="11" fill="white" font-family="Inter,sans-serif" font-weight="800" letter-spacing="1">KNOW</text>
+  <text x="380" y="270" text-anchor="middle" font-size="11" fill="white" font-family="Inter,sans-serif" font-weight="800" letter-spacing="1">KIT</text>
+  <!-- Pulse ring -->
+  <circle cx="380" cy="258" r="30" fill="none" stroke="#4A90D9" stroke-width="1" opacity="0.3">
+    <animate attributeName="r" values="30;38;30" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0;0.3" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <rect x="332" y="300" width="96" height="20" rx="10" fill="#4A90D9" opacity="0.15"/>
+  <text x="380" y="314" text-anchor="middle" font-size="8.5" fill="#4A90D9" font-family="Inter,sans-serif" font-weight="600">Aufzeichnung aktiv</text>
+
+  <!-- Bottom controls -->
+  <g filter="url(#m-s2)">
+    <rect x="150" y="356" width="240" height="44" rx="22" fill="white" stroke="#E1E8EF" stroke-width="1"/>
+  </g>
+  <circle cx="210" cy="378" r="16" fill="#F0F4F8"/><rect x="206" y="372" width="8" height="12" rx="4" fill="#475569"/>
+  <circle cx="270" cy="378" r="16" fill="#F0F4F8"/><rect x="262" y="374" width="16" height="10" rx="2" fill="#475569"/>
+  <circle cx="330" cy="378" r="16" fill="#FF6B6B"/><rect x="322" y="375" width="16" height="6" rx="3" fill="white"/>
+
+  <!-- Floating live transcript -->
+  <g filter="url(#m-s1)">
+    <rect x="380" y="360" width="156" height="56" rx="14" fill="url(#m-glass)" stroke="white" stroke-opacity="0.6" stroke-width="1"/>
+  </g>
+  <rect x="394" y="372" width="22" height="22" rx="6" fill="url(#m-grad)"/>
+  <text x="405" y="387" text-anchor="middle" font-size="10" fill="white" font-family="Inter,sans-serif" font-weight="800">AI</text>
+  <text x="422" y="381" font-size="7.5" fill="#0F172A" font-family="Inter,sans-serif" font-weight="700">Live-Transkript</text>
+  <rect x="422" y="388" width="96" height="4" rx="2" fill="#4A90D9" opacity="0.3"/>
+  <rect x="422" y="396" width="72" height="4" rx="2" fill="#4A90D9" opacity="0.2">
+    <animate attributeName="width" values="40;72;56;72" dur="3s" repeatCount="indefinite"/>
+  </rect>
+</svg>
