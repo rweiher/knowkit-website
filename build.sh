@@ -17,7 +17,9 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-PUBLIC_ASSETS=(images js content.json impressum.html datenschutz.html robots.txt sitemap.xml)
+# Files copied 1:1 (NOT content.json — that one goes through build_content.py to
+# strip disabled variants before publication).
+PUBLIC_ASSETS=(images js impressum.html datenschutz.html robots.txt sitemap.xml)
 
 build_de() {
   echo "→ Building dist/de  (for knowkit.de)"
@@ -27,6 +29,7 @@ build_de() {
   for asset in "${PUBLIC_ASSETS[@]}"; do
     [ -e "$asset" ] && cp -R "$asset" "dist/de/$asset"
   done
+  python3 build_content.py dist/de/content.json
   echo "  ✓ dist/de ready ($(du -sh dist/de | cut -f1))"
 }
 
@@ -39,6 +42,7 @@ build_ai() {
   for asset in "${PUBLIC_ASSETS[@]}"; do
     [ -e "$asset" ] && cp -R "$asset" "dist/ai/$asset"
   done
+  python3 build_content.py dist/ai/content.json
   echo "  ✓ dist/ai ready ($(du -sh dist/ai | cut -f1))"
 }
 

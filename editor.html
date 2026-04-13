@@ -32,6 +32,26 @@
     .variant-tab { position: relative; }
     .variant-tab .dot { width: 6px; height: 6px; border-radius: 9999px; }
   </style>
+  <script>
+    // SECURITY: editor only runs on localhost.
+    // If served from any other origin, replace the page with a refusal.
+    (function () {
+      var h = location.hostname;
+      var isLocal = h === 'localhost' || h === '127.0.0.1' || h === '::1' || h === '';
+      if (!isLocal) {
+        document.documentElement.innerHTML =
+          '<head><meta charset="utf-8"><title>Not available</title></head>' +
+          '<body style="font-family:system-ui,sans-serif;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0">' +
+            '<div style="max-width:480px;text-align:center;padding:32px">' +
+              '<h1 style="font-size:24px;margin:0 0 12px">Editor not available</h1>' +
+              '<p style="color:#94a3b8;line-height:1.5">The KnowKit content editor is a local-only tool. It is not served from this domain.</p>' +
+            '</div>' +
+          '</body>';
+        // Stop further script execution
+        throw new Error('Editor refused: not running on localhost');
+      }
+    })();
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-800">
 
