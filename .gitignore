@@ -3,6 +3,8 @@ dist/
 
 # Local editor runtime artifacts
 .content-backups/
+editor.pid
+editor.log
 
 # Python
 __pycache__/
