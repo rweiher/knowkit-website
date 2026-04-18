@@ -13,8 +13,18 @@ function json(obj, status = 200) {
 }
 
 function checkAuth(request) {
-  const email = request.headers.get('Cf-Access-Authenticated-User-Email');
-  return email || null;
+  const direct = request.headers.get('Cf-Access-Authenticated-User-Email');
+  if (direct) return direct;
+  const jwt = request.headers.get('Cf-Access-Jwt-Assertion');
+  if (!jwt) return null;
+  const parts = jwt.split('.');
+  if (parts.length !== 3) return null;
+  try {
+    const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+    return payload.email || null;
+  } catch {
+    return null;
+  }
 }
 
 function parseId(params) {

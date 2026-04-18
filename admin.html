@@ -134,35 +134,17 @@ async function fetchLeads() {
   document.getElementById('loading').textContent = 'Lädt…';
   try {
     const r = await fetch('/api/admin/leads', { headers: { 'Accept': 'application/json' } });
-    const rawBody = await r.text();
-    console.group('[KnowKit Admin] /api/admin/leads Response');
-    console.log('Status:', r.status);
-    console.log('Response-Headers:');
-    for (const [k, v] of r.headers) console.log('  ', k, ':', v);
-    let parsed = null;
-    try { parsed = JSON.parse(rawBody); } catch {}
-    if (parsed) {
-      console.log('Body (parsed):', parsed);
-      if (parsed.debug_headers) {
-        console.log('=== Headers, die die Function von Cloudflare bekommen hat ===');
-        console.table(parsed.debug_headers);
-      }
-    } else {
-      console.log('Body (raw):', rawBody);
-    }
-    console.groupEnd();
-
     if (!r.ok) {
-      throw new Error(`HTTP ${r.status}: ${rawBody.slice(0, 300)}`);
+      const body = await r.text();
+      throw new Error(`HTTP ${r.status}: ${body.slice(0, 200)}`);
     }
-    const data = parsed || JSON.parse(rawBody);
+    const data = await r.json();
     allLeads = data.leads || [];
     document.getElementById('user-email').textContent = data.authenticated_user || '';
     render();
   } catch (err) {
-    console.error('[KnowKit Admin] fetchLeads fehlgeschlagen:', err);
     document.getElementById('leads-body').innerHTML =
-      `<tr><td colspan="7" class="text-center py-10 text-red-600">Fehler: ${escapeHtml(err.message)} — Details in der Browser-Konsole</td></tr>`;
+      `<tr><td colspan="7" class="text-center py-10 text-red-600">Fehler: ${escapeHtml(err.message)}</td></tr>`;
   }
 }
 
