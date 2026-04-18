@@ -26,9 +26,12 @@ build_de() {
   rm -rf dist/de
   mkdir -p dist/de
   cp index.html dist/de/index.html
+  cp admin.html dist/de/admin.html
   for asset in "${PUBLIC_ASSETS[@]}"; do
     [ -e "$asset" ] && cp -R "$asset" "dist/de/$asset"
   done
+  # Pages Functions (Lead-API + Admin-API)
+  [ -d functions ] && cp -R functions dist/de/functions
   python3 build_content.py dist/de/content.json
   echo "  ✓ dist/de ready ($(du -sh dist/de | cut -f1))"
 }
@@ -42,6 +45,8 @@ build_ai() {
   for asset in "${PUBLIC_ASSETS[@]}"; do
     [ -e "$asset" ] && cp -R "$asset" "dist/ai/$asset"
   done
+  # Das AI-Formular POSTet cross-origin an https://www.knowkit.de/api/leads,
+  # deshalb braucht dist/ai keine eigenen Functions und kein D1-Binding.
   python3 build_content.py dist/ai/content.json
   echo "  ✓ dist/ai ready ($(du -sh dist/ai | cut -f1))"
 }

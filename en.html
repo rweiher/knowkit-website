@@ -547,7 +547,7 @@
           </div>
         </div>
         <div class="fade-up" style="transition-delay: 0.15s;">
-          <form id="demo-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="space-y-4">
+          <form id="demo-form" action="https://www.knowkit.de/api/leads" method="POST" class="space-y-4">
             <input type="text" name="name" required data-content-placeholder="demo.form_name" class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-600 placeholder-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"/>
             <input type="text" name="company" required data-content-placeholder="demo.form_company" class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-600 placeholder-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"/>
             <input type="email" name="email" required data-content-placeholder="demo.form_email" class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-600 placeholder-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"/>
@@ -559,8 +559,21 @@
               <option value="51-200" data-content="demo.form_team_size_3"></option>
               <option value="200+" data-content="demo.form_team_size_4"></option>
             </select>
+            <select name="industry" required class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors appearance-none">
+              <option value="" disabled selected data-content="demo.form_industry_label"></option>
+              <option value="it-software" data-content="demo.form_industry_1"></option>
+              <option value="beratung" data-content="demo.form_industry_2"></option>
+              <option value="industrie-fertigung" data-content="demo.form_industry_3"></option>
+              <option value="finanzen-versicherung" data-content="demo.form_industry_4"></option>
+              <option value="handel-dienstleistung" data-content="demo.form_industry_5"></option>
+              <option value="oeffentliche-hand" data-content="demo.form_industry_6"></option>
+              <option value="sonstige" data-content="demo.form_industry_7"></option>
+            </select>
             <textarea name="use_case" rows="3" data-content-placeholder="demo.form_use_case" class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-600 placeholder-gray-400 text-[15px] focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors resize-none"></textarea>
-            <input type="hidden" name="_subject" value="KnowKit Demo Request"/>
+            <!-- Honeypot: hidden from users, bots fill it -->
+            <input type="text" name="website_url" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true"/>
+            <input type="hidden" name="language" value="en"/>
+            <input type="hidden" name="source" value="demo-form"/>
             <button type="submit" id="demo-submit-btn" class="w-full bg-accent text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary transition-colors">
               <span data-content="demo.form_submit"></span>
             </button>

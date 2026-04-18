@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>KnowKit Admin — Leads</title>
+  <link rel="icon" href="images/favicon.ico" sizes="any"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1A6FA8', 'primary-dark': '#0E4D78',
+            accent: '#3BA8E8', 'accent-light': '#6BC1EF',
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400; font-size: 20px; vertical-align: middle; }
+    .status-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .status-new      { background:#DBEAFE; color:#1E40AF; }
+    .status-contacted{ background:#FEF3C7; color:#92400E; }
+    .status-meeting  { background:#E9D5FF; color:#6B21A8; }
+    .status-won      { background:#D1FAE5; color:#065F46; }
+    .status-lost     { background:#FEE2E2; color:#991B1B; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<!-- HEADER -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-20">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img src="images/knowkit-logo.png" alt="" class="h-7"/>
+      <span class="font-bold text-gray-800">KnowKit</span>
+      <span class="text-gray-400">/</span>
+      <span class="text-gray-500 font-medium">Admin — Leads</span>
+    </div>
+    <div class="flex items-center gap-4 text-sm">
+      <span id="user-email" class="text-gray-500"></span>
+      <a href="/cdn-cgi/access/logout" class="text-gray-500 hover:text-gray-800 flex items-center gap-1">
+        <span class="material-symbols-outlined">logout</span> Abmelden
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-8">
+
+  <!-- FILTER BAR -->
+  <div class="flex flex-wrap items-center gap-3 mb-6">
+    <div class="relative flex-1 min-w-[240px] max-w-md">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+      <input id="search" type="text" placeholder="Name, Firma, E-Mail, Use-Case…"
+             class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent text-sm"/>
+    </div>
+    <select id="filter-status" class="px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-accent">
+      <option value="">Alle Status</option>
+      <option value="new">Neu</option>
+      <option value="contacted">Kontaktiert</option>
+      <option value="meeting">Termin</option>
+      <option value="won">Kunde</option>
+      <option value="lost">Verloren</option>
+    </select>
+    <button id="btn-refresh" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-sm flex items-center gap-1">
+      <span class="material-symbols-outlined">refresh</span> Aktualisieren
+    </button>
+    <span id="count" class="text-sm text-gray-500 ml-auto"></span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+        <tr>
+          <th class="text-left px-4 py-3 font-semibold">Eingang</th>
+          <th class="text-left px-4 py-3 font-semibold">Name / Firma</th>
+          <th class="text-left px-4 py-3 font-semibold">Kontakt</th>
+          <th class="text-left px-4 py-3 font-semibold">Team</th>
+          <th class="text-left px-4 py-3 font-semibold">Branche</th>
+          <th class="text-left px-4 py-3 font-semibold">Status</th>
+          <th class="text-right px-4 py-3 font-semibold">&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody id="leads-body" class="divide-y divide-gray-100">
+        <tr><td colspan="7" class="text-center py-10 text-gray-400" id="loading">Lädt…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- DETAIL-MODAL -->
+<div id="modal" class="hidden fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm">
+  <div class="fixed top-0 right-0 h-full w-full max-w-xl bg-white shadow-2xl overflow-y-auto">
+    <div class="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
+      <h2 class="text-xl font-bold text-gray-800">Lead-Details</h2>
+      <button id="modal-close" class="text-gray-400 hover:text-gray-700">
+        <span class="material-symbols-outlined" style="font-size:28px">close</span>
+      </button>
+    </div>
+    <div id="modal-body" class="p-6 space-y-5">
+      <!-- rendered by JS -->
+    </div>
+    <div class="p-6 border-t border-gray-200 flex items-center justify-between sticky bottom-0 bg-white">
+      <button id="btn-delete" class="text-sm text-red-600 hover:text-red-800 flex items-center gap-1">
+        <span class="material-symbols-outlined">delete</span> Lead löschen
+      </button>
+      <div class="flex items-center gap-3">
+        <span id="save-indicator" class="text-xs text-gray-400"></span>
+        <button id="btn-close" class="px-4 py-2 rounded-lg bg-gray-800 text-white hover:bg-gray-700 text-sm">Schließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STATUS_LABELS = {
+  new: 'Neu', contacted: 'Kontaktiert', meeting: 'Termin', won: 'Kunde', lost: 'Verloren'
+};
+let allLeads = [];
+let currentLead = null;
+
+async function fetchLeads() {
+  document.getElementById('loading').textContent = 'Lädt…';
+  try {
+    const r = await fetch('/api/admin/leads', { headers: { 'Accept': 'application/json' } });
+    if (!r.ok) {
+      const body = await r.text();
+      throw new Error(`HTTP ${r.status}: ${body.slice(0, 200)}`);
+    }
+    const data = await r.json();
+    allLeads = data.leads || [];
+    document.getElementById('user-email').textContent = data.authenticated_user || '';
+    render();
+  } catch (err) {
+    document.getElementById('leads-body').innerHTML =
+      `<tr><td colspan="7" class="text-center py-10 text-red-600">Fehler: ${escapeHtml(err.message)}</td></tr>`;
+  }
+}
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const st = document.getElementById('filter-status').value;
+
+  let rows = allLeads;
+  if (st) rows = rows.filter(r => (r.status || 'new') === st);
+  if (q) rows = rows.filter(r => {
+    const hay = `${r.name||''} ${r.company||''} ${r.email||''} ${r.use_case||''} ${r.industry||''} ${r.notes||''}`.toLowerCase();
+    return hay.includes(q);
+  });
+
+  document.getElementById('count').textContent = `${rows.length} / ${allLeads.length}`;
+
+  const tbody = document.getElementById('leads-body');
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center py-10 text-gray-400">Keine Leads.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = rows.map(lead => {
+    const status = lead.status || 'new';
+    return `
+      <tr class="hover:bg-gray-50 cursor-pointer" data-id="${lead.id}">
+        <td class="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">${formatDate(lead.created_at)}</td>
+        <td class="px-4 py-3">
+          <div class="font-semibold text-gray-800">${escapeHtml(lead.name || '')}</div>
+          <div class="text-gray-500 text-xs">${escapeHtml(lead.company || '')}</div>
+        </td>
+        <td class="px-4 py-3">
+          <div class="text-gray-700">${escapeHtml(lead.email || '')}</div>
+          <div class="text-gray-400 text-xs">${escapeHtml(lead.phone || '—')}</div>
+        </td>
+        <td class="px-4 py-3 text-gray-600">${escapeHtml(lead.team_size || '—')}</td>
+        <td class="px-4 py-3 text-gray-600">${escapeHtml(lead.industry || '—')}</td>
+        <td class="px-4 py-3"><span class="status-pill status-${status}">${STATUS_LABELS[status] || status}</span></td>
+        <td class="px-4 py-3 text-right">
+          <span class="material-symbols-outlined text-gray-300">chevron_right</span>
+        </td>
+      </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('tr[data-id]').forEach(tr => {
+    tr.addEventListener('click', () => openLead(parseInt(tr.dataset.id, 10)));
+  });
+}
+
+function openLead(id) {
+  const lead = allLeads.find(l => l.id === id);
+  if (!lead) return;
+  currentLead = lead;
+  const status = lead.status || 'new';
+
+  document.getElementById('modal-body').innerHTML = `
+    <div>
+      <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Eingang</p>
+      <p class="text-gray-800">${formatDate(lead.created_at)} · Sprache: ${escapeHtml(lead.language || 'de')} · Quelle: ${escapeHtml(lead.source || 'demo-form')}</p>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Name</p>
+        <p class="text-gray-800 font-semibold">${escapeHtml(lead.name || '')}</p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Firma</p>
+        <p class="text-gray-800 font-semibold">${escapeHtml(lead.company || '')}</p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">E-Mail</p>
+        <p class="text-gray-800"><a href="mailto:${escapeHtml(lead.email||'')}" class="text-accent hover:underline">${escapeHtml(lead.email || '')}</a></p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Telefon</p>
+        <p class="text-gray-800">${lead.phone ? `<a href="tel:${escapeHtml(lead.phone)}" class="text-accent hover:underline">${escapeHtml(lead.phone)}</a>` : '—'}</p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Teamgröße</p>
+        <p class="text-gray-800">${escapeHtml(lead.team_size || '—')}</p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Branche</p>
+        <p class="text-gray-800">${escapeHtml(lead.industry || '—')}</p>
+      </div>
+    </div>
+    <div>
+      <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Use-Case (Formulareingabe)</p>
+      <p class="text-gray-800 whitespace-pre-wrap bg-gray-50 rounded-lg p-3 text-sm">${escapeHtml(lead.use_case || '—')}</p>
+    </div>
+
+    <hr class="border-gray-200"/>
+
+    <div class="grid grid-cols-2 gap-4">
+      <label class="block">
+        <span class="text-xs text-gray-400 uppercase tracking-wider mb-1 block">Status</span>
+        <select id="f-status" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-accent">
+          ${Object.keys(STATUS_LABELS).map(k =>
+            `<option value="${k}"${status === k ? ' selected' : ''}>${STATUS_LABELS[k]}</option>`
+          ).join('')}
+        </select>
+      </label>
+      <label class="block">
+        <span class="text-xs text-gray-400 uppercase tracking-wider mb-1 block">Wiedervorlage</span>
+        <input type="date" id="f-followup" value="${escapeHtml(lead.follow_up_date || '')}"
+               class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-accent"/>
+      </label>
+    </div>
+    <label class="block">
+      <span class="text-xs text-gray-400 uppercase tracking-wider mb-1 block">Verantwortlich (E-Mail)</span>
+      <input type="email" id="f-assigned" value="${escapeHtml(lead.assigned_to || '')}"
+             placeholder="z.B. name@knowkit.de"
+             class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-accent"/>
+    </label>
+    <label class="block">
+      <span class="text-xs text-gray-400 uppercase tracking-wider mb-1 block">Interne Notizen</span>
+      <textarea id="f-notes" rows="5" placeholder="Was wurde besprochen? Nächste Schritte?"
+                class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:border-accent resize-none">${escapeHtml(lead.notes || '')}</textarea>
+    </label>
+  `;
+
+  // Auto-save on change/blur
+  ['f-status', 'f-followup', 'f-assigned', 'f-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    const evt = (id === 'f-status') ? 'change' : 'blur';
+    el.addEventListener(evt, saveCurrent);
+  });
+
+  document.getElementById('modal').classList.remove('hidden');
+}
+
+async function saveCurrent() {
+  if (!currentLead) return;
+  const payload = {
+    status: document.getElementById('f-status').value,
+    follow_up_date: document.getElementById('f-followup').value || null,
+    assigned_to: document.getElementById('f-assigned').value.trim() || null,
+    notes: document.getElementById('f-notes').value,
+  };
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = 'Speichert…';
+  try {
+    const r = await fetch(`/api/admin/leads/${currentLead.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    Object.assign(currentLead, payload);
+    ind.textContent = 'Gespeichert ✓';
+    setTimeout(() => { ind.textContent = ''; }, 1500);
+    // Update list row silently
+    render();
+  } catch (err) {
+    ind.textContent = `Fehler: ${err.message}`;
+  }
+}
+
+async function deleteCurrent() {
+  if (!currentLead) return;
+  if (!confirm(`Lead von "${currentLead.name}" (${currentLead.email}) wirklich löschen? Das lässt sich nicht rückgängig machen.`)) return;
+  try {
+    const r = await fetch(`/api/admin/leads/${currentLead.id}`, { method: 'DELETE' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    allLeads = allLeads.filter(l => l.id !== currentLead.id);
+    closeModal();
+    render();
+  } catch (err) {
+    alert(`Fehler beim Löschen: ${err.message}`);
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.add('hidden');
+  currentLead = null;
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso.replace(' ', 'T') + 'Z');
+  if (isNaN(d)) return iso;
+  return d.toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[c]);
+}
+
+document.getElementById('btn-refresh').addEventListener('click', fetchLeads);
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('filter-status').addEventListener('change', render);
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('btn-close').addEventListener('click', closeModal);
+document.getElementById('btn-delete').addEventListener('click', deleteCurrent);
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal') closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+fetchLeads();
+</script>
+</body>
+</html>
