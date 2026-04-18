@@ -13,7 +13,18 @@ export async function onRequestGet({ request, env }) {
   if (!env.DB) return json({ error: 'Database not configured' }, 500);
 
   const email = request.headers.get('Cf-Access-Authenticated-User-Email');
-  if (!email) return json({ error: 'Not authenticated' }, 401);
+  if (!email) {
+    // DEBUG: zeige was Cloudflare tatsächlich mitschickt
+    const received = {};
+    for (const [k, v] of request.headers) {
+      if (/cookie|authorization|secret/i.test(k)) {
+        received[k] = '[redacted]';
+      } else {
+        received[k] = v.length > 200 ? v.slice(0, 200) + '…' : v;
+      }
+    }
+    return json({ error: 'Not authenticated', debug_headers: received }, 401);
+  }
 
   const { results } = await env.DB.prepare(
     `SELECT id, created_at, updated_at, name, company, email, phone,
