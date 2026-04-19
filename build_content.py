@@ -2,17 +2,17 @@
 """
 Sanitize content.json for production deployment.
 
-Removes:
-  - Disabled variants (_enabled: false) — they are drafts and would otherwise
-    be publicly readable at /content.json
-  - Variant metadata that has no purpose at runtime (_name)
-  - Empty variants (no field has any text)
+Default mode: removes disabled variants, variant metadata (_name), and empty
+variants — so the runtime only sees deployable content.
 
-Reads content.json from current dir, writes the sanitized version to the path
-given as the only argument.
+Landing-page mode (--only <VariantName>): keeps only that named variant per
+section, ignores the _enabled flag, forcibly marks it as the single active
+variant. Used to produce dedicated landings like flaschenhals.knowkit.de that
+always show Variant C, regardless of what's toggled in the editor.
 
 Usage:
   python3 build_content.py dist/de/content.json
+  python3 build_content.py dist/flaschenhals/content.json --only C
 """
 import json
 import sys
@@ -26,16 +26,14 @@ def is_meaningful_variant(v):
     for k, val in v.items():
         if k.startswith('_'):
             continue
-        # strings: non-empty after strip
         if isinstance(val, str) and val.strip():
             return True
-        # arrays (e.g. nav.order): non-empty
         if isinstance(val, list) and len(val) > 0:
             return True
     return False
 
 
-def sanitize(data):
+def sanitize(data, only=None):
     out = {}
     for lang, sections in data.items():
         out[lang] = {}
@@ -45,13 +43,21 @@ def sanitize(data):
                 for v in section['_variants']:
                     if not isinstance(v, dict):
                         continue
-                    if v.get('_enabled') is not True:
-                        continue
+                    if only is not None:
+                        # Landing mode: pick only the variant with matching _name,
+                        # ignore _enabled, force it on in the output.
+                        if v.get('_name') != only:
+                            continue
+                    else:
+                        # Default mode: respect _enabled.
+                        if v.get('_enabled') is not True:
+                            continue
                     if not is_meaningful_variant(v):
                         continue
                     clean = {k: val for k, val in v.items() if k != '_name'}
+                    if only is not None:
+                        clean['_enabled'] = True
                     kept.append(clean)
-                # If everything was filtered, keep an empty list — runtime falls back to {}
                 out[lang][section_name] = {'_variants': kept}
             else:
                 out[lang][section_name] = section
@@ -59,28 +65,41 @@ def sanitize(data):
 
 
 def main():
-    if len(sys.argv) != 2:
-        print('Usage: build_content.py <output-path>', file=sys.stderr)
+    args = sys.argv[1:]
+    only = None
+    positional = []
+    i = 0
+    while i < len(args):
+        a = args[i]
+        if a == '--only' and i + 1 < len(args):
+            only = args[i + 1]
+            i += 2
+        else:
+            positional.append(a)
+            i += 1
+
+    if len(positional) != 1:
+        print('Usage: build_content.py <output-path> [--only <VariantName>]', file=sys.stderr)
         sys.exit(1)
 
     src = Path('content.json')
-    dst = Path(sys.argv[1])
+    dst = Path(positional[0])
 
     with src.open('r', encoding='utf-8') as f:
         data = json.load(f)
 
-    sanitized = sanitize(data)
+    sanitized = sanitize(data, only=only)
 
     dst.parent.mkdir(parents=True, exist_ok=True)
     with dst.open('w', encoding='utf-8') as f:
         json.dump(sanitized, f, ensure_ascii=False, indent=2)
         f.write('\n')
 
-    # Stats
     src_size = src.stat().st_size
     dst_size = dst.stat().st_size
     pct = (dst_size / src_size * 100) if src_size else 0
-    print(f'  content.json sanitized: {src_size:,} → {dst_size:,} bytes ({pct:.0f}% of original)')
+    mode = f' (only={only})' if only else ''
+    print(f'  content.json sanitized{mode}: {src_size:,} → {dst_size:,} bytes ({pct:.0f}% of original)')
 
 
 if __name__ == '__main__':

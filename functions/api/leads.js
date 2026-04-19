@@ -7,6 +7,8 @@ const ALLOWED_ORIGINS = [
   'https://knowkit.de',
   'https://www.knowkit.ai',
   'https://knowkit.ai',
+  'https://flaschenhals.knowkit.de',
+  'https://bottleneck.knowkit.ai',
 ];
 
 function corsHeaders(origin) {

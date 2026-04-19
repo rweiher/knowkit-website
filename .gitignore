@@ -6,6 +6,9 @@ dist/
 editor.pid
 editor.log
 
+# Manual backups aus Skript-Edits
+content.json.bak-*
+
 # Python
 __pycache__/
 *.pyc

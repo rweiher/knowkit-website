@@ -1,24 +1,26 @@
 #!/usr/bin/env bash
-# Build static deployment bundles for each domain.
+# Build static deployment bundles per domain.
 #
-#   ./build.sh          → builds both dist/de and dist/ai
-#   ./build.sh de       → builds only dist/de
-#   ./build.sh ai       → builds only dist/ai
+#   ./build.sh                    → builds all four (de, ai, flaschenhals, bottleneck)
+#   ./build.sh de                 → main DE site (www.knowkit.de)
+#   ./build.sh ai                 → main EN site (www.knowkit.ai)
+#   ./build.sh flaschenhals       → DE landing (flaschenhals.knowkit.de) — always Variant C
+#   ./build.sh bottleneck         → EN landing (bottleneck.knowkit.ai)   — always Variant C
+#   ./build.sh both               → legacy: just de + ai (main sites)
 #
 # The deploy bundles contain ONLY what the public site needs:
-#   - index.html (DE) or en.html renamed to index.html (AI)
+#   - index.html (or en.html renamed for EN bundles)
 #   - images/, js/
-#   - content.json (served at runtime for text variants)
+#   - content.json (sanitized via build_content.py)
 #   - impressum.html, datenschutz.html, robots.txt, sitemap.xml
+#   - dist/de also includes admin.html + functions/ (lead API + admin panel)
 #
-# Editor, editor_server.py and .content-backups/ are never deployed.
+# Editor files (editor.html, editor_server.py) are never deployed.
 
 set -euo pipefail
 
 cd "$(dirname "$0")"
 
-# Files copied 1:1 (NOT content.json — that one goes through build_content.py to
-# strip disabled variants before publication).
 PUBLIC_ASSETS=(images js impressum.html datenschutz.html robots.txt sitemap.xml)
 
 build_de() {
@@ -51,13 +53,43 @@ build_ai() {
   echo "  ✓ dist/ai ready ($(du -sh dist/ai | cut -f1))"
 }
 
-TARGET="${1:-both}"
+build_flaschenhals() {
+  echo "→ Building dist/flaschenhals  (for flaschenhals.knowkit.de — always Variant C)"
+  rm -rf dist/flaschenhals
+  mkdir -p dist/flaschenhals
+  cp index.html dist/flaschenhals/index.html
+  for asset in "${PUBLIC_ASSETS[@]}"; do
+    [ -e "$asset" ] && cp -R "$asset" "dist/flaschenhals/$asset"
+  done
+  # Die Landing braucht keine Pages Functions — Form postet cross-origin an www.knowkit.de/api/leads.
+  python3 build_content.py dist/flaschenhals/content.json --only C
+  echo "  ✓ dist/flaschenhals ready ($(du -sh dist/flaschenhals | cut -f1))"
+}
+
+build_bottleneck() {
+  echo "→ Building dist/bottleneck    (for bottleneck.knowkit.ai — always Variant C)"
+  rm -rf dist/bottleneck
+  mkdir -p dist/bottleneck
+  cp en.html dist/bottleneck/index.html
+  for asset in "${PUBLIC_ASSETS[@]}"; do
+    [ -e "$asset" ] && cp -R "$asset" "dist/bottleneck/$asset"
+  done
+  python3 build_content.py dist/bottleneck/content.json --only C
+  echo "  ✓ dist/bottleneck ready ($(du -sh dist/bottleneck | cut -f1))"
+}
+
+TARGET="${1:-all}"
 
 case "$TARGET" in
-  de)   build_de ;;
-  ai)   build_ai ;;
-  both) build_de; build_ai ;;
-  *)    echo "Unknown target: $TARGET"; echo "Usage: ./build.sh [de|ai|both]"; exit 1 ;;
+  de)             build_de ;;
+  ai)             build_ai ;;
+  flaschenhals)   build_flaschenhals ;;
+  bottleneck)     build_bottleneck ;;
+  both)           build_de; build_ai ;;
+  all)            build_de; build_ai; build_flaschenhals; build_bottleneck ;;
+  *)              echo "Unknown target: $TARGET"
+                  echo "Usage: ./build.sh [de|ai|flaschenhals|bottleneck|both|all]"
+                  exit 1 ;;
 esac
 
 echo

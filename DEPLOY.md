@@ -1,11 +1,17 @@
 # Deployment Guide
 
-Die KnowKit-Website wird auf **zwei Domains** gehostet:
+Die KnowKit-Website wird auf **vier Domains** gehostet:
 
-| Domain | Inhalt | Build-Output |
-|---|---|---|
-| `www.knowkit.de` | Deutsche Version | `dist/de/` |
-| `www.knowkit.ai` | Englische Version | `dist/ai/` |
+| Domain | Inhalt | Build-Output | Build-Target |
+|---|---|---|---|
+| `www.knowkit.de` | Deutsch, Variante A (Haupt) | `dist/de/` | `bash build.sh de` |
+| `www.knowkit.ai` | Englisch, Variante A (Haupt) | `dist/ai/` | `bash build.sh ai` |
+| `flaschenhals.knowkit.de` | Deutsch, Variante C (KI-Ära) | `dist/flaschenhals/` | `bash build.sh flaschenhals` |
+| `bottleneck.knowkit.ai` | Englisch, Variante C (KI-Ära) | `dist/bottleneck/` | `bash build.sh bottleneck` |
+
+Die beiden Landing-Subdomains zeigen **immer** Variant C — unabhängig davon, was im Editor aktiviert ist. Wird per `--only C` beim `build_content.py` erzwungen.
+
+Form-Einreichungen von allen vier Domains gehen cross-origin an `https://www.knowkit.de/api/leads` (CORS in `functions/api/leads.js` freigegeben). Nur das `knowkit-de`-Pages-Projekt hat die D1-Bindung und die Pages Functions.
 
 Der **Editor** (`editor.html` + `editor_server.py`) läuft nur lokal. Er ist nie Teil eines Deploy-Bundles. Workflow:
 
@@ -67,6 +73,29 @@ Analog zu knowkit-de, aber:
    - Build command: `bash build.sh ai`
    - Build output directory: `dist/ai`
    - Custom domain: `www.knowkit.ai`
+
+### 3b. Cloudflare Pages – Landing "knowkit-flaschenhals" (optional)
+
+Wenn die KI-Ära-Landing unter `flaschenhals.knowkit.de` live gehen soll:
+
+1. Workers & Pages → Create → Pages → Connect to Git → dasselbe Repo
+2. **Build settings:**
+   - Project name: `knowkit-flaschenhals`
+   - Production branch: `main`
+   - Build command: `bash build.sh flaschenhals`
+   - Build output directory: `dist/flaschenhals`
+3. Nach dem ersten Deploy: Custom domains → `flaschenhals.knowkit.de` hinzufügen
+4. **Keine D1-Bindung nötig** — die Landing schreibt Leads cross-origin zurück an `www.knowkit.de/api/leads`
+
+### 3c. Cloudflare Pages – Landing "knowkit-bottleneck" (optional)
+
+Wenn die EN-Variante unter `bottleneck.knowkit.ai` live gehen soll:
+
+1. Project name: `knowkit-bottleneck`
+2. Build command: `bash build.sh bottleneck`
+3. Build output directory: `dist/bottleneck`
+4. Custom domain: `bottleneck.knowkit.ai`
+5. Ebenfalls **keine D1-Bindung nötig**
 
 ### 4. DNS
 
